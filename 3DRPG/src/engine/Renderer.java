@@ -41,7 +41,7 @@ public class Renderer {
 				shader.setUniform("modelViewMatrix", modelViewMatrix);
 				shader.setUniform("colour", e.getMesh().getColour());
 				shader.setUniform("useColour", e.getMesh().isTextured() ? 0 : 1);
-				e.getMesh().draw();
+				e.getMesh().render();
 			}
 		}
 		shader.unbind();

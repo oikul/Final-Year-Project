@@ -6,10 +6,11 @@ import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_CORE_PROFILE;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_FORWARD_COMPAT;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_PROFILE;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
 import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwGetKey;
+import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwSetFramebufferSizeCallback;
@@ -21,6 +22,7 @@ import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glPolygonMode;
 
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -65,7 +67,8 @@ public class Window {
 			glfwSwapInterval(1);
 		}
 		glEnable(GL11.GL_DEPTH_TEST);
-		glEnable(GL11.GL_CULL_FACE);
+		//glEnable(GL11.GL_CULL_FACE);
+		glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 		glfwShowWindow(window);
 	}
 
