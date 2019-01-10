@@ -98,7 +98,7 @@ public class Game implements IGameLogic {
 		mesh = new Mesh(vertices, textCoords, normals, indices);
 		test = new Entity(mesh);
 		test.setScale(1.5f);
-		test.setPosition(0, 0, 0);
+		test.setPosition(50, 1, -12);
 		entities[1] = test;
 		test = new Entity(mesh);
 		test.setScale(2.5f);
@@ -112,11 +112,17 @@ public class Game implements IGameLogic {
 		test.setScale(2.7f);
 		test.setPosition(7, 9, -21);
 		entities[4] = test;
-		CylinderGenerator cylinder = new CylinderGenerator(3, 6, 5);
+		CylinderGenerator cylinder = new CylinderGenerator(1,1f, 6, 4);
 		test = new Entity(cylinder.getMesh());
 		test.setScale(1f);
 		test.setPosition(10, 10, -10);
 		entities[5] = test;
+		TreeGenerator tree = new TreeGenerator(1f, 0.85f, 3f, 0.95f, 0.5f, 1.5f, 8, 4);
+		Entity[] treeMesh = tree.getTree();
+		for(int i = 0; i < treeMesh.length; i++){
+			test = treeMesh[i];
+			entities[6+i] = test;
+		}
 //		int count = 0;
 //		for(int i = 0; i < 20; i++){
 //			for(int j = 0; j < 20; j ++){
