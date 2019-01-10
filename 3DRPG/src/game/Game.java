@@ -78,6 +78,7 @@ public class Game implements IGameLogic {
 	public Game() {
 		renderer = new Renderer();
 		camera = new Camera();
+		entities = new Entity[400];
 	}
 
 	@Override
@@ -93,24 +94,29 @@ public class Game implements IGameLogic {
 		texture = new Texture();
 		texture.loadTexture(getBufferedImage("grass_jungle"));
 		Terrain terrain = new Terrain(1, 1f, 256, 256, 1, 0, 6, 1, 8);
-		entities = terrain.getChunks();
-//		mesh = new Mesh(vertices, textCoords, normals, indices);
-//		test = new Entity(mesh);
-//		test.setScale(1.5f);
-//		test.setPosition(0, 0, 0);
-//		entities[0] = test;
-//		test = new Entity(mesh);
-//		test.setScale(2.5f);
-//		test.setPosition(1, 2, -42);
-//		entities[1] = test;
-//		test = new Entity(mesh);
-//		test.setScale(13f);
-//		test.setPosition(6, 1, -22);
-//		entities[2] = test;
-//		test = new Entity(mesh);
-//		test.setScale(2.7f);
-//		test.setPosition(7, 9, -21);
-//		entities[3] = test;
+		//entities[0] = terrain.getChunks()[0];
+		mesh = new Mesh(vertices, textCoords, normals, indices);
+		test = new Entity(mesh);
+		test.setScale(1.5f);
+		test.setPosition(0, 0, 0);
+		entities[1] = test;
+		test = new Entity(mesh);
+		test.setScale(2.5f);
+		test.setPosition(1, 2, -42);
+		entities[2] = test;
+		test = new Entity(mesh);
+		test.setScale(13f);
+		test.setPosition(6, 1, -22);
+		entities[3] = test;
+		test = new Entity(mesh);
+		test.setScale(2.7f);
+		test.setPosition(7, 9, -21);
+		entities[4] = test;
+		CylinderGenerator cylinder = new CylinderGenerator(3, 6, 5);
+		test = new Entity(cylinder.getMesh());
+		test.setScale(1f);
+		test.setPosition(10, 10, -10);
+		entities[5] = test;
 //		int count = 0;
 //		for(int i = 0; i < 20; i++){
 //			for(int j = 0; j < 20; j ++){
