@@ -41,6 +41,9 @@ public class CylinderGenerator {
 		v0.x = 0;
 		v0.y = height;
 		v0.z = 0;
+		positionsList.add(v0.x);
+		positionsList.add(v0.y);
+		positionsList.add(v0.z);
 		angle = 0;
 		for (int i = 0; i < subdivisions; i++) {
 			double incX = radiusTop * Math.cos((double) angle);
@@ -55,44 +58,10 @@ public class CylinderGenerator {
 			v0.y = height;
 			v0.z = 0;
 		}
-		positionsList.add(v0.x);
-		positionsList.add(v0.y);
-		positionsList.add(v0.z);
 		positions = new float[positionsList.size()];
 		for (int i = 0; i < positionsList.size(); i++) {
 			positions[i] = positionsList.get(i);
 		}
-		/*for(int i = 0; i < positions.length / 3; i ++){
-			if(i == 0){
-				for(int j = 1; j < positions.length / 6; j++){
-					indicesList.add(i);
-					indicesList.add(j);
-					if(j < positions.length / 6 - 1){
-						indicesList.add(j+1);
-					}else{
-						indicesList.add(1);
-					}
-				}
-			}else if(i > 0 && i < positions.length / 6){
-				indicesList.add(i);
-				indicesList.add(i + 1);
-				indicesList.add(i + positions.length / 6 - 1);
-			}else if(i >= positions.length / 6 && i < positions.length / 3 - 2){
-//				indicesList.add(i);
-//				indicesList.add(i + 1);
-//				indicesList.add(i - positions.length / 6);
-			}else if(i == positions.length / 3 - 1){
-				for(int j = positions.length / 6; j < positions.length / 3; j++){
-					indicesList.add(i);
-					indicesList.add(j);
-					if(j < positions.length / 3 - 1){
-						indicesList.add(j+1);
-					}else{
-						indicesList.add(positions.length / 6 -1);
-					}
-				}
-			}
-		}*/
 		for(int i = 0; i < positions.length / 3; i++){
 			if(i == 0){
 				for(int j = 1; j < positions.length / 6; j++){
@@ -104,20 +73,36 @@ public class CylinderGenerator {
 						indicesList.add(1);
 					}
 				}
-			}else if(i == positions.length / 3 - 1){
+			}else if(i == positions.length / 6){
 				for(int j = positions.length / 6; j < positions.length / 3; j++){
 					indicesList.add(i);
 					indicesList.add(j);
-					if(j < positions.length / 3 - 2){
+					if(j < positions.length / 3 - 1){
 						indicesList.add(j+1);
 					}else{
-						indicesList.add(positions.length / 6);
+						indicesList.add(positions.length / 6 + 1);
 					}
 				}
 			}else if(i > 0 && i < positions.length / 6){
 				indicesList.add(i);
-				indicesList.add(i+1);
-				indicesList.add(i+positions.length/6-1);
+				if(i+1 == positions.length / 6){
+					indicesList.add(1);
+				}else{
+					indicesList.add(i+1);
+				}
+				indicesList.add(i+positions.length/6);
+			}else if(i > positions.length / 6 && i < positions.length / 3){
+				indicesList.add(i);
+				if(i + 1 == positions.length / 3){
+					indicesList.add(positions.length / 6 + 1);
+				}else{
+					indicesList.add(i + 1);
+				}
+				if(i - positions.length / 6 + 1 == positions.length / 6){
+					indicesList.add(1);
+				}else{
+					indicesList.add(i - positions.length / 6 + 1);
+				}
 			}
 		}
 		indices = new int[indicesList.size()];

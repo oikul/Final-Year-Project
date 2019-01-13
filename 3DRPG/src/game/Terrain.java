@@ -20,7 +20,7 @@ public class Terrain {
 													// height;
 				Entity terrainChunk = new Entity(mesh.getMesh());
 				terrainChunk.setScale(scale);
-				terrainChunk.setPosition(xDisplacement, -width/10, zDisplacement);
+				terrainChunk.setPosition(xDisplacement, -amplitude, zDisplacement);
 				chunks[row * blocksPerRow + col] = terrainChunk;
 			}
 		}

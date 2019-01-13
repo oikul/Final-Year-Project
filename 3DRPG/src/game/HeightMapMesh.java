@@ -22,7 +22,7 @@ public class HeightMapMesh {
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
 				positions.add(startX + col + incx);
-				positions.add(generator.generateHeight(col, row));
+				positions.add(generator.generateHeight(col, row) - (amplitude * octaves / 2));
 				positions.add(startZ + row + incz);
 
 				textCoords.add((float) textInc * (float) col / (float) width);
