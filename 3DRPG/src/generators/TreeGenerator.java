@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
+import org.joml.Vector3f;
+
 import engine.Entity;
 
 public class TreeGenerator {
@@ -55,7 +57,7 @@ public class TreeGenerator {
 		LSystemGenerator gen = new LSystemGenerator("XF", "+-[]", "X>F+[[X]-X]-F[-FX]+X,F>FF");
 		String treeString = gen.repeat(iterations, "X");
 		System.out.println(treeString);
-		float angleX = 0, angleY = 0, angleZ = 0, xPos = 0, yPos = 0, zPos = 0;
+		Vector3f position = new Vector3f(0, 0, 0), rotation = new Vector3f(0, 0, 0);
 		Stack<Float> variableSave = new Stack<Float>();
 		List<Entity> treeParts = new ArrayList<Entity>();
 		for (int i = 0; i < treeString.length(); i++) {
@@ -63,39 +65,41 @@ public class TreeGenerator {
 			case 'F':
 				treeParts.add(new Entity(
 						new CylinderGenerator(baseRadius, baseRadius * radiusDecrease, baseHeight, 8).getMesh()));
-				treeParts.get(treeParts.size() - 1).setRotation(angleX, angleY, angleZ);
-				treeParts.get(treeParts.size() - 1).setPosition(xPos, yPos, zPos);
-				yPos += baseHeight;
+				treeParts.get(treeParts.size() - 1).setRotation(rotation);
+				treeParts.get(treeParts.size() - 1).setPosition(position);
+				position = new Vector3f(position.x + baseHeight * (float) Math.cos((float) rotation.x), position.y + baseHeight, position.z + baseHeight * (float) Math.cos((float) rotation.z));
 				baseRadius *= radiusDecrease;
 				baseHeight *= heightDecrease;
 				break;
 			case '+':
-				angleX += angleIncrement;
+				rotation = new Vector3f(rotation.x + angleIncrement, rotation.y, rotation.z);
 				break;
 			case '-':
-				angleX -= angleIncrement;
+				rotation = new Vector3f(rotation.x - angleIncrement, rotation.y, rotation.z);
 				break;
 			case '[':
-				variableSave.push(angleX);
-				variableSave.push(angleY);
-				variableSave.push(angleZ);
+				variableSave.push(rotation.x);
+				variableSave.push(rotation.y);
+				variableSave.push(rotation.z);
 				variableSave.push(baseRadius);
 				variableSave.push(baseHeight);
-				variableSave.push(xPos);
-				variableSave.push(yPos);
-				variableSave.push(zPos);
+				variableSave.push(position.x);
+				variableSave.push(position.y);
+				variableSave.push(position.z);
 				System.out.println("pushing to stack");
 				break;
 			case ']':
 				try {
-					zPos = variableSave.pop();
-					yPos = variableSave.pop();
-					xPos = variableSave.pop();
+					float z = variableSave.pop();
+					float y = variableSave.pop();
+					float x = variableSave.pop();
+					position.set(x, y, z);
 					baseHeight = variableSave.pop();
 					baseRadius = variableSave.pop();
-					angleX = variableSave.pop();
-					angleY = variableSave.pop();
-					angleZ = variableSave.pop();
+					float angleX = variableSave.pop();
+					float angleY = variableSave.pop();
+					float angleZ = variableSave.pop();
+					rotation.set(angleX, angleY, angleZ);
 					System.out.println("popping from stack");
 				} catch (Exception e) {
 					e.printStackTrace();

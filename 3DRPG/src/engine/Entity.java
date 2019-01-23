@@ -10,7 +10,7 @@ public class Entity {
 	
 	public Entity(Mesh mesh){
 		this.mesh = mesh;
-		this.position = new Vector3f(0, 0, -5f);
+		this.position = new Vector3f(0, 0, 0);
 		scale = 1;
 		rotation = new Vector3f(0, 0, 0);
 	}
