@@ -81,7 +81,7 @@ public class Game implements IGameLogic {
 	public Game() {
 		renderer = new Renderer();
 		camera = new Camera();
-		entities = new Entity[400];
+		entities = new Entity[1000];
 	}
 
 	@Override
@@ -120,18 +120,18 @@ public class Game implements IGameLogic {
 		test.setScale(1f);
 		test.setPosition(0, -1, -10);
 		entities[5] = test;
-		TreeGenerator tree = new TreeGenerator(1f, 0.85f, 1f, 0.95f, 0.2f, 1.5f, 30, 30, 8, 300, 0);
+		TreeGenerator tree = new TreeGenerator(3, 5f, 0.5f, 0.85f, 0.5f, 0.95f);
 		Entity[] treeMesh = tree.getTree();
 		for(int i = 0; i < treeMesh.length; i++){
 			test = treeMesh[i];
 			entities[6+i] = test;
 		}
-		LSystemGenerator gen = new LSystemGenerator("XF", "+-[]", "X>F+[[X]-X]-F[-FX]+X,F>FF");
-		System.out.println(gen.repeat(0, "X"));
-		System.out.println(gen.repeat(1, "X"));
-		System.out.println(gen.repeat(2, "X"));
-		System.out.println(gen.repeat(3, "X"));
-		System.out.println(gen.repeat(4, "X"));
+//		LSystemGenerator gen = new LSystemGenerator("XF", "+-[]", "X>F+[[X]-X]-F[-FX]+X,F>FF");
+//		System.out.println(gen.repeat(0, "X"));
+//		System.out.println(gen.repeat(1, "X"));
+//		System.out.println(gen.repeat(2, "X"));
+//		System.out.println(gen.repeat(3, "X"));
+//		System.out.println(gen.repeat(4, "X"));
 //		int count = 0;
 //		for(int i = 0; i < 20; i++){
 //			for(int j = 0; j < 20; j ++){

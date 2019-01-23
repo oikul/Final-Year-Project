@@ -31,9 +31,9 @@ public class LSystemGenerator {
 		String finish = start;
 		for(int i = 0; i < start.length(); i++){
 			for(String rule : rules){
-				String target = "" + rule.charAt(0);
+				char target = rule.charAt(0);
 				String replacement = rule.substring(rule.indexOf(">") + 1);
-				if(("" + start.charAt(i)).equals(target)){
+				if(start.charAt(i) == target){
 					finish = finish.substring(0, i) + replacement + finish.substring(i + 1);
 				}
 			}
