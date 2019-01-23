@@ -6,6 +6,7 @@ import java.util.List;
 import org.joml.Vector3f;
 
 import engine.Mesh;
+import generators.ValueNoiseGenerator;
 
 public class HeightMapMesh {
 

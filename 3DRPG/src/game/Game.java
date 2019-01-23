@@ -25,6 +25,9 @@ import engine.Renderer;
 import engine.Shader;
 import engine.Texture;
 import engine.Window;
+import generators.CylinderGenerator;
+import generators.LSystemGenerator;
+import generators.TreeGenerator;
 
 public class Game implements IGameLogic {
 
