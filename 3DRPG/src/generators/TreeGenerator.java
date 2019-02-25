@@ -67,7 +67,7 @@ public class TreeGenerator {
 						new CylinderGenerator(baseRadius, baseRadius * radiusDecrease, baseHeight, 8).getMesh()));
 				treeParts.get(treeParts.size() - 1).setRotation(rotation);
 				treeParts.get(treeParts.size() - 1).setPosition(position);
-				position = new Vector3f(position.x + baseHeight * (float) Math.cos((float) rotation.x), position.y + baseHeight, position.z + baseHeight * (float) Math.cos((float) rotation.z));
+				position = new Vector3f(position.x, position.y + baseHeight, position.z);
 				baseRadius *= radiusDecrease;
 				baseHeight *= heightDecrease;
 				break;

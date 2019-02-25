@@ -28,17 +28,28 @@ public class LSystemGenerator {
 	}
 	
 	public String doOnce(String start){
-		String finish = start;
+//		String finish = start;
+//		for(int i = 0; i < start.length(); i++){
+//			for(String rule : rules){
+//				char target = rule.charAt(0);
+//				String replacement = rule.substring(rule.indexOf(">") + 1);
+//				if(start.charAt(i) == target){
+//					finish = finish.substring(0, i) + replacement + finish.substring(i + 1);
+//				}
+//			}
+//		}
+//		return finish;
 		for(int i = 0; i < start.length(); i++){
 			for(String rule : rules){
 				char target = rule.charAt(0);
 				String replacement = rule.substring(rule.indexOf(">") + 1);
 				if(start.charAt(i) == target){
-					finish = finish.substring(0, i) + replacement + finish.substring(i + 1);
+					start = start.substring(0, i) + replacement + start.substring(i + 1);
+					i += replacement.length() - 1;
 				}
 			}
 		}
-		return finish;
+		return start;
 	}
 
 }
