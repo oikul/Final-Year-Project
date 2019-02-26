@@ -10,6 +10,8 @@ import static org.lwjgl.opengl.GL11.glViewport;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
@@ -26,7 +28,6 @@ import engine.Shader;
 import engine.Texture;
 import engine.Window;
 import generators.CylinderGenerator;
-import generators.LSystemGenerator;
 import generators.TreeGenerator;
 
 public class Game implements IGameLogic {
@@ -71,17 +72,19 @@ public class Game implements IGameLogic {
 	private Texture texture;
 	private Entity test;
 	private Entity[] entities;
+	private ArrayList<Entity> entityList;
 	private Camera camera;
 	private Vector3f cameraInc = new Vector3f();
 	private float CAMERA_POS_STEP = 0.0001f, MOUSE_SENSITIVITY = 0.001f;
 	private static Texture t = new Texture();
+	private Random random;
 
 	private final Renderer renderer;
 
 	public Game() {
 		renderer = new Renderer();
 		camera = new Camera();
-		entities = new Entity[1000];
+		entityList = new ArrayList<Entity>();
 	}
 
 	@Override
@@ -97,7 +100,7 @@ public class Game implements IGameLogic {
 		texture = new Texture();
 		texture.loadTexture(getBufferedImage("grass_jungle"));
 		Terrain terrain = new Terrain(1, 1f, 256, 256, 1, 0, 8, 1, 8);
-		entities[0] = terrain.getChunks()[0];
+		entityList.add(terrain.getChunks()[0]);
 		mesh = new Mesh(vertices, textCoords, normals, indices);
 		test = new Entity(mesh);
 		test.setScale(1.5f);
@@ -119,12 +122,17 @@ public class Game implements IGameLogic {
 		test = new Entity(cylinder.getMesh());
 		test.setScale(1f);
 		test.setPosition(0, -1, -10);
-		entities[5] = test;
-		TreeGenerator tree = new TreeGenerator(3, 5f, 0.5f, 0.85f, 0.5f, 0.95f);
-		Entity[] treeMesh = tree.getTree();
+		//entities[5] = test;
+		random = new Random();
+		Entity[] treeMesh;
+		TreeGenerator tree = new TreeGenerator(5, 20f, 0, 0.4f, 0.95f, 0.8f, 0.95f, random.nextLong(), random.nextFloat() * 20, 0, random.nextFloat() * 20);
+		treeMesh = tree.getTree();
 		for(int i = 0; i < treeMesh.length; i++){
-			test = treeMesh[i];
-			entities[6+i] = test;
+			entityList.add(treeMesh[i]);
+		}
+		entities = new Entity[entityList.size()];
+		for(Entity e : entityList){
+			entities[entityList.indexOf(e)] = e;
 		}
 //		LSystemGenerator gen = new LSystemGenerator("XF", "+-[]", "X>F+[[X]-X]-F[-FX]+X,F>FF");
 //		System.out.println(gen.repeat(0, "X"));

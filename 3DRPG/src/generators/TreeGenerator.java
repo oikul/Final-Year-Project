@@ -52,12 +52,12 @@ public class TreeGenerator {
 		}
 	}
 
-	public TreeGenerator(int iterations, float angleIncrement, float baseRadius, float radiusDecrease, float baseHeight,
-			float heightDecrease) {
-		LSystemGenerator gen = new LSystemGenerator("XF", "+-[]", "X>F+[[X]-X]-F[-FX]+X,F>FF");
+	public TreeGenerator(int iterations, float angleIncrement, float angleRandomness, float baseRadius, float radiusDecrease, float baseHeight,
+			float heightDecrease, long seed, float startX, float startY, float startZ) {
+		LSystemGenerator gen = new LSystemGenerator("XF", "+-[]", "X0.9>F+[[X]-X]-F[-FX]+X,X0.9>F-[[X]+X]+F[+FX]-X,F0.5>FF", seed);
 		String treeString = gen.repeat(iterations, "X");
-		System.out.println(treeString);
-		Vector3f position = new Vector3f(0, 0, 0), rotation = new Vector3f(0, 0, 0);
+		random = new Random(seed);
+		Vector3f position = new Vector3f(startX, startY, startZ), rotation = new Vector3f(0, 0, 0);
 		Stack<Float> variableSave = new Stack<Float>();
 		List<Entity> treeParts = new ArrayList<Entity>();
 		for (int i = 0; i < treeString.length(); i++) {
@@ -67,14 +67,20 @@ public class TreeGenerator {
 						new CylinderGenerator(baseRadius, baseRadius * radiusDecrease, baseHeight, 8).getMesh()));
 				treeParts.get(treeParts.size() - 1).setRotation(rotation);
 				treeParts.get(treeParts.size() - 1).setPosition(position);
-				position = new Vector3f(position.x, position.y + baseHeight, position.z);
+				position = new Vector3f(position.x + baseHeight * (float) Math.sin(Math.toRadians(rotation.z)), position.y + baseHeight * (float) Math.cos(Math.toRadians(rotation.z)), position.z + baseHeight * (float) Math.sin(Math.toRadians(rotation.x)));
 				baseRadius *= radiusDecrease;
 				baseHeight *= heightDecrease;
 				break;
 			case '+':
-				rotation = new Vector3f(rotation.x + angleIncrement, rotation.y, rotation.z);
+				rotation = new Vector3f(rotation.x, rotation.y, rotation.z + angleIncrement);
 				break;
 			case '-':
+				rotation = new Vector3f(rotation.x, rotation.y, rotation.z - angleIncrement);
+				break;
+			case '*':
+				rotation = new Vector3f(rotation.x + angleIncrement, rotation.y, rotation.z);
+				break;
+			case '/':
 				rotation = new Vector3f(rotation.x - angleIncrement, rotation.y, rotation.z);
 				break;
 			case '[':
@@ -86,21 +92,19 @@ public class TreeGenerator {
 				variableSave.push(position.x);
 				variableSave.push(position.y);
 				variableSave.push(position.z);
-				System.out.println("pushing to stack");
 				break;
 			case ']':
 				try {
 					float z = variableSave.pop();
 					float y = variableSave.pop();
 					float x = variableSave.pop();
-					position.set(x, y, z);
+					position = new Vector3f(x, y, z);
 					baseHeight = variableSave.pop();
 					baseRadius = variableSave.pop();
-					float angleX = variableSave.pop();
-					float angleY = variableSave.pop();
 					float angleZ = variableSave.pop();
-					rotation.set(angleX, angleY, angleZ);
-					System.out.println("popping from stack");
+					float angleY = variableSave.pop();
+					float angleX = variableSave.pop();
+					rotation = new Vector3f(angleX, angleY, angleZ);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
