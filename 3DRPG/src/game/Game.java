@@ -62,15 +62,43 @@ public class Game implements IGameLogic {
 		random = new Random();
 		TreeGenerator treeGen = new TreeGenerator("X0.4>F+[[X]-X]-F[-FX]+X,X0.4>F-[[X]+X]+F[+FX]-X,X0.4>F*[[X]/X]/F[/FX]*X,X0.4>F/[[X]*X]*F[*FX]/X,F0.6>FF", System.currentTimeMillis());
 		Entity[] tree;
-		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 128, 0, random.nextFloat() * 128);
+		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
 		for(int i = 0; i < tree.length; i++){
 			entityList.add(tree[i]);
 		}
-		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 28, 0, random.nextFloat() * 28);
+		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
 		for(int i = 0; i < tree.length; i++){
 			entityList.add(tree[i]);
 		}
-		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 28, 0, random.nextFloat() * 28);
+		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
+		for(int i = 0; i < tree.length; i++){
+			entityList.add(tree[i]);
+		}
+		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
+		for(int i = 0; i < tree.length; i++){
+			entityList.add(tree[i]);
+		}
+		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
+		for(int i = 0; i < tree.length; i++){
+			entityList.add(tree[i]);
+		}
+		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
+		for(int i = 0; i < tree.length; i++){
+			entityList.add(tree[i]);
+		}
+		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
+		for(int i = 0; i < tree.length; i++){
+			entityList.add(tree[i]);
+		}
+		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
+		for(int i = 0; i < tree.length; i++){
+			entityList.add(tree[i]);
+		}
+		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
+		for(int i = 0; i < tree.length; i++){
+			entityList.add(tree[i]);
+		}
+		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
 		for(int i = 0; i < tree.length; i++){
 			entityList.add(tree[i]);
 		}

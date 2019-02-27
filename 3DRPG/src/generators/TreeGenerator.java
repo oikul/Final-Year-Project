@@ -13,10 +13,8 @@ public class TreeGenerator {
 	private Entity[] tree;
 	private CylinderGenerator cylinder;
 	private LSystemGenerator lSystemGen;
-	private long seed;
 
 	public TreeGenerator(String rules, long seed) {
-		this.seed = seed;
 		lSystemGen = new LSystemGenerator(rules, seed);
 	}
 	
@@ -34,8 +32,6 @@ public class TreeGenerator {
 						cylinder.makeCylinder(baseRadius, baseRadius * radiusDecrease, baseHeight, 6)));
 				treeParts.get(treeParts.size() - 1).setRotation(rotation);
 				treeParts.get(treeParts.size() - 1).setPosition(position);
-				//float phi = (float) (Math.atan(Math.sqrt(Math.pow(position.x, 2) + Math.pow(position.y, 2))/position.z));
-				//position = new Vector3f(position.x + (float) (baseHeight * Math.sin(phi) * Math.sin(Math.toRadians(rotation.z))), position.y + (float) (baseHeight * Math.sin(phi) * Math.cos(Math.toRadians(rotation.z))), position.z + (float) (baseHeight * Math.cos(phi)));
 				position = new Vector3f(position.x + (float) (baseHeight * Math.sin(Math.toRadians(rotation.z)) * Math.cos(Math.toRadians(rotation.y))), position.y + baseHeight * (float) Math.cos(Math.toRadians(rotation.z)), position.z + (float) (baseHeight * Math.sin(Math.toRadians(rotation.z)) * Math.sin(Math.toRadians(rotation.y))));
 				baseRadius *= radiusDecrease;
 				baseHeight *= heightDecrease;
