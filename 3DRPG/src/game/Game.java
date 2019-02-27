@@ -68,16 +68,13 @@ public class Game implements IGameLogic {
 	float[] textCoords = new float[] { 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1,
 			0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1 };
 	float[] normals = new float[] {};
-	private Mesh mesh;
 	private Texture texture;
-	private Entity test;
 	private Entity[] entities;
 	private ArrayList<Entity> entityList;
 	private Camera camera;
 	private Vector3f cameraInc = new Vector3f();
 	private float CAMERA_POS_STEP = 0.0001f, MOUSE_SENSITIVITY = 0.001f;
 	private static Texture t = new Texture();
-	private Random random;
 
 	private final Renderer renderer;
 
@@ -101,55 +98,15 @@ public class Game implements IGameLogic {
 		texture.loadTexture(getBufferedImage("grass_jungle"));
 		Terrain terrain = new Terrain(1, 1f, 256, 256, 1, 0, 8, 1, 8);
 		entityList.add(terrain.getChunks()[0]);
-		mesh = new Mesh(vertices, textCoords, normals, indices);
-		test = new Entity(mesh);
-		test.setScale(1.5f);
-		test.setPosition(50, 1, -12);
-		//entities[1] = test;
-		test = new Entity(mesh);
-		test.setScale(2.5f);
-		test.setPosition(1, 2, -42);
-		//entities[2] = test;
-		test = new Entity(mesh);
-		test.setScale(13f);
-		test.setPosition(6, 1, -22);
-		//entities[3] = test;
-		test = new Entity(mesh);
-		test.setScale(2.7f);
-		test.setPosition(7, 9, -21);
-		//entities[4] = test;
-		CylinderGenerator cylinder = new CylinderGenerator(1,1f, 6, 4);
-		test = new Entity(cylinder.getMesh());
-		test.setScale(1f);
-		test.setPosition(0, -1, -10);
-		//entities[5] = test;
-		random = new Random();
-		Entity[] treeMesh;
-		TreeGenerator tree = new TreeGenerator(5, 20f, 0, 0.4f, 0.95f, 0.8f, 0.95f, random.nextLong(), random.nextFloat() * 20, 0, random.nextFloat() * 20);
-		treeMesh = tree.getTree();
-		for(int i = 0; i < treeMesh.length; i++){
-			entityList.add(treeMesh[i]);
+		TreeGenerator treeGen = new TreeGenerator(0);
+		Entity[] tree = treeGen.makeTree(3, 30f, 0.4f, 0.95f, 0.8f, 0.95f, 0, 0, 0);
+		for(int i = 0; i < tree.length; i++){
+			entityList.add(tree[i]);
 		}
 		entities = new Entity[entityList.size()];
 		for(Entity e : entityList){
 			entities[entityList.indexOf(e)] = e;
 		}
-//		LSystemGenerator gen = new LSystemGenerator("XF", "+-[]", "X>F+[[X]-X]-F[-FX]+X,F>FF");
-//		System.out.println(gen.repeat(0, "X"));
-//		System.out.println(gen.repeat(1, "X"));
-//		System.out.println(gen.repeat(2, "X"));
-//		System.out.println(gen.repeat(3, "X"));
-//		System.out.println(gen.repeat(4, "X"));
-//		int count = 0;
-//		for(int i = 0; i < 20; i++){
-//			for(int j = 0; j < 20; j ++){
-//				test = new Entity(mesh);
-//				test.setScale(1);
-//				test.setPosition(i - 10, -10, j - 10);
-//				entities[count] = test;
-//				count ++;
-//			}
-//		}
 	}
 
 	public static BufferedImage getBufferedImage(String path) {

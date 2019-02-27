@@ -15,8 +15,8 @@ public class CylinderGenerator {
 	private List<Float> positionsList = new ArrayList<Float>();
 	private List<Integer> indicesList = new ArrayList<Integer>();
 	private Mesh mesh;
-
-	public CylinderGenerator(float radiusBottom, float radiusTop, float height, int subdivisions) {
+	
+	public Mesh makeCylinder(float radiusBottom, float radiusTop, float height, int subdivisions) {
 		float incAngle = (float) ((float) (2 * Math.PI) / (float) subdivisions);
 		Vector3f v0 = new Vector3f();
 		v0.x = 0;
@@ -112,9 +112,6 @@ public class CylinderGenerator {
 		textCoords = new float[indices.length];
 		normals = new float[indices.length];
 		mesh = new Mesh(positions, textCoords, normals, indices);
-	}
-
-	public Mesh getMesh() {
 		return mesh;
 	}
 

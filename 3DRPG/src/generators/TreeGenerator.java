@@ -2,7 +2,6 @@ package generators;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Stack;
 
 import org.joml.Vector3f;
@@ -12,51 +11,17 @@ import engine.Entity;
 public class TreeGenerator {
 
 	private Entity[] tree;
-	private Random random;
+	private CylinderGenerator cylinder;
+	private long seed;
 
-	public TreeGenerator(float baseRadius, float radiusDecrease, float baseHeight, float heightDecrease,
-			float baseSplitChance, float splitChanceIncrease, float theta, float thetaIncrease, int subdivisions,
-			int levels, long seed) {
-		random = new Random(seed);
-		List<Entity> treeParts = new ArrayList<Entity>();
-		float yPos = 0;
-		float thetaCounter = 0, phiCounter = 0;
-		for (int i = 0; i < levels; i++) {
-			if (random.nextFloat() <= baseSplitChance) {
-				treeParts.add(new Entity(
-						new CylinderGenerator(baseRadius, baseRadius * radiusDecrease, baseHeight, subdivisions)
-								.getMesh()));
-				treeParts.get(i).setPosition(0, yPos, 0);
-				treeParts.get(i).setRotation(theta + thetaCounter, 0, random.nextFloat() * 360);
-				// thetaCounter += theta;
-				// phiCounter += phi;
-				treeParts.add(new Entity(
-						new CylinderGenerator(baseRadius, baseRadius * radiusDecrease, baseHeight, subdivisions)
-								.getMesh()));
-				treeParts.get(i + 1).setPosition(0, yPos, 0);
-				i++;
-			} else {
-				treeParts.add(new Entity(
-						new CylinderGenerator(baseRadius, baseRadius * radiusDecrease, baseHeight, subdivisions)
-								.getMesh()));
-				treeParts.get(i).setPosition(0, yPos, 0);
-			}
-			yPos += baseHeight;
-			baseRadius = baseRadius * radiusDecrease;
-			baseHeight = baseHeight * heightDecrease;
-			baseSplitChance = baseSplitChance * splitChanceIncrease;
-		}
-		tree = new Entity[treeParts.size()];
-		for (int i = 0; i < tree.length; i++) {
-			tree[i] = treeParts.get(i);
-		}
+	public TreeGenerator(long seed) {
+		this.seed = seed;
 	}
-
-	public TreeGenerator(int iterations, float angleIncrement, float angleRandomness, float baseRadius, float radiusDecrease, float baseHeight,
-			float heightDecrease, long seed, float startX, float startY, float startZ) {
-		LSystemGenerator gen = new LSystemGenerator("XF", "+-[]", "X0.9>F+[[X]-X]-F[-FX]+X,X0.9>F-[[X]+X]+F[+FX]-X,F0.5>FF", seed);
+	
+	public Entity[] makeTree(int iterations, float angleIncrement, float baseRadius, float radiusDecrease, float baseHeight, float heightDecrease, float startX, float startY, float startZ){
+		LSystemGenerator gen = new LSystemGenerator("XF", "+-[]", "X0.4>F+[[X]-X]-F[-FX]+X,X0.4>F-[[X]+X]+F[+FX]-X,X0.4>F*[[X]/X]/F[/FX]*X,X0.4>F/[[X]*X]*F[*FX]/X,F0.6>FF", seed);
 		String treeString = gen.repeat(iterations, "X");
-		random = new Random(seed);
+		cylinder = new CylinderGenerator();
 		Vector3f position = new Vector3f(startX, startY, startZ), rotation = new Vector3f(0, 0, 0);
 		Stack<Float> variableSave = new Stack<Float>();
 		List<Entity> treeParts = new ArrayList<Entity>();
@@ -64,10 +29,12 @@ public class TreeGenerator {
 			switch (treeString.charAt(i)) {
 			case 'F':
 				treeParts.add(new Entity(
-						new CylinderGenerator(baseRadius, baseRadius * radiusDecrease, baseHeight, 8).getMesh()));
+						cylinder.makeCylinder(baseRadius, baseRadius * radiusDecrease, baseHeight, 6)));
 				treeParts.get(treeParts.size() - 1).setRotation(rotation);
 				treeParts.get(treeParts.size() - 1).setPosition(position);
-				position = new Vector3f(position.x + baseHeight * (float) Math.sin(Math.toRadians(rotation.z)), position.y + baseHeight * (float) Math.cos(Math.toRadians(rotation.z)), position.z + baseHeight * (float) Math.sin(Math.toRadians(rotation.x)));
+				//float phi = (float) (Math.atan(Math.sqrt(Math.pow(position.x, 2) + Math.pow(position.y, 2))/position.z));
+				//position = new Vector3f(position.x + (float) (baseHeight * Math.sin(phi) * Math.sin(Math.toRadians(rotation.z))), position.y + (float) (baseHeight * Math.sin(phi) * Math.cos(Math.toRadians(rotation.z))), position.z + (float) (baseHeight * Math.cos(phi)));
+				position = new Vector3f(position.x + (float) (baseHeight * Math.sin(Math.toRadians(rotation.z)) * Math.cos(Math.toRadians(rotation.y))), position.y + baseHeight * (float) Math.cos(Math.toRadians(rotation.z)), position.z + (float) (baseHeight * Math.sin(Math.toRadians(rotation.z)) * Math.sin(Math.toRadians(rotation.y))));
 				baseRadius *= radiusDecrease;
 				baseHeight *= heightDecrease;
 				break;
@@ -78,10 +45,10 @@ public class TreeGenerator {
 				rotation = new Vector3f(rotation.x, rotation.y, rotation.z - angleIncrement);
 				break;
 			case '*':
-				rotation = new Vector3f(rotation.x + angleIncrement, rotation.y, rotation.z);
+				rotation = new Vector3f(rotation.x, rotation.y + angleIncrement, rotation.z);
 				break;
 			case '/':
-				rotation = new Vector3f(rotation.x - angleIncrement, rotation.y, rotation.z);
+				rotation = new Vector3f(rotation.x, rotation.y - angleIncrement, rotation.z);
 				break;
 			case '[':
 				variableSave.push(rotation.x);
@@ -115,9 +82,6 @@ public class TreeGenerator {
 		for (int i = 0; i < tree.length; i++) {
 			tree[i] = treeParts.get(i);
 		}
-	}
-
-	public Entity[] getTree() {
 		return tree;
 	}
 
