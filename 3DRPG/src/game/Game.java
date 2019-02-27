@@ -1,4 +1,5 @@
 package game;
+
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_SHIFT;
@@ -27,6 +28,7 @@ import engine.Shader;
 import engine.Texture;
 import engine.Window;
 import generators.TreeGenerator;
+import generators.VoronoiGenerator;
 
 public class Game implements IGameLogic {
 
@@ -57,53 +59,25 @@ public class Game implements IGameLogic {
 		shader.createUniform("texture_sampler");
 		shader.createUniform("colour");
 		shader.createUniform("useColour");
-		Terrain terrain = new Terrain(1, 1f, 256, 256, 1, 0, 8, 1, 8);
+		Terrain terrain = new Terrain(1, 1f, 256, 256, 1, 0, 4, 1, 8);
 		entityList.add(terrain.getChunks()[0]);
 		random = new Random();
-		TreeGenerator treeGen = new TreeGenerator("X0.4>F+[[X]-X]-F[-FX]+X,X0.4>F-[[X]+X]+F[+FX]-X,X0.4>F*[[X]/X]/F[/FX]*X,X0.4>F/[[X]*X]*F[*FX]/X,F0.6>FF", System.currentTimeMillis());
+		TreeGenerator treeGen = new TreeGenerator(
+				"X0.4>F+[[X]-X]-F[-FX]+X,X0.4>F-[[X]+X]+F[+FX]-X,X0.4>F*[[X]/X]/F[/FX]*X,X0.4>F/[[X]*X]*F[*FX]/X,F0.6>FF",
+				System.currentTimeMillis());
 		Entity[] tree;
-		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
-		for(int i = 0; i < tree.length; i++){
-			entityList.add(tree[i]);
+		for (int loop = 0; loop < 10; loop++) {
+			tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f,
+					0.8f, 0.95f, random.nextFloat() * 256f - 128f, -4, random.nextFloat() * 256f - 128f);
+			for (int i = 0; i < tree.length; i++) {
+				entityList.add(tree[i]);
+			}
 		}
-		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
-		for(int i = 0; i < tree.length; i++){
-			entityList.add(tree[i]);
-		}
-		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
-		for(int i = 0; i < tree.length; i++){
-			entityList.add(tree[i]);
-		}
-		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
-		for(int i = 0; i < tree.length; i++){
-			entityList.add(tree[i]);
-		}
-		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
-		for(int i = 0; i < tree.length; i++){
-			entityList.add(tree[i]);
-		}
-		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
-		for(int i = 0; i < tree.length; i++){
-			entityList.add(tree[i]);
-		}
-		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
-		for(int i = 0; i < tree.length; i++){
-			entityList.add(tree[i]);
-		}
-		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
-		for(int i = 0; i < tree.length; i++){
-			entityList.add(tree[i]);
-		}
-		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
-		for(int i = 0; i < tree.length; i++){
-			entityList.add(tree[i]);
-		}
-		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 50f - 25f, 0, random.nextFloat() * 50f - 25f);
-		for(int i = 0; i < tree.length; i++){
-			entityList.add(tree[i]);
-		}
+		VoronoiGenerator voronoi = new VoronoiGenerator(0, System.currentTimeMillis());
+		Entity v = new Entity(voronoi.generateVoronoi(6, 0f, 256f, 0f, 256f, 0, 128f));
+		//entityList.add(v);
 		entities = new Entity[entityList.size()];
-		for(Entity e : entityList){
+		for (Entity e : entityList) {
 			entities[entityList.indexOf(e)] = e;
 		}
 	}

@@ -7,6 +7,7 @@ import java.util.Stack;
 import org.joml.Vector3f;
 
 import engine.Entity;
+import engine.Mesh;
 
 public class TreeGenerator {
 
@@ -28,8 +29,9 @@ public class TreeGenerator {
 		for (int i = 0; i < treeString.length(); i++) {
 			switch (treeString.charAt(i)) {
 			case 'F':
-				treeParts.add(new Entity(
-						cylinder.makeCylinder(baseRadius, baseRadius * radiusDecrease, baseHeight, 6)));
+				Mesh m = cylinder.makeCylinder(baseRadius, baseRadius * radiusDecrease, baseHeight, 6);
+				m.setColour(new Vector3f(1.0f, 0.7f, 0.4f));
+				treeParts.add(new Entity(m));
 				treeParts.get(treeParts.size() - 1).setRotation(rotation);
 				treeParts.get(treeParts.size() - 1).setPosition(position);
 				position = new Vector3f(position.x + (float) (baseHeight * Math.sin(Math.toRadians(rotation.z)) * Math.cos(Math.toRadians(rotation.y))), position.y + baseHeight * (float) Math.cos(Math.toRadians(rotation.z)), position.z + (float) (baseHeight * Math.sin(Math.toRadians(rotation.z)) * Math.sin(Math.toRadians(rotation.y))));

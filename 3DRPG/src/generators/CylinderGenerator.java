@@ -117,5 +117,21 @@ public class CylinderGenerator {
 		mesh = new Mesh(positions, textCoords, normals, indices);
 		return mesh;
 	}
+	
+	public float[] getPositions(){
+		return positions;
+	}
+	
+	public float[] getTextCoords(){
+		return textCoords;
+	}
+	
+	public float[] getNormals(){
+		return normals;
+	}
+	
+	public int[] getIndices(){
+		return indices;
+	}
 
 }

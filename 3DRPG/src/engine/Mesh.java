@@ -31,12 +31,12 @@ import org.lwjgl.system.MemoryUtil;
 
 public class Mesh {
 
-	private static final Vector3f DEFAULT_COLOUR = new Vector3f(0.0f, 1.0f, 1.0f);
-	private final int vaoId;
-	private final List<Integer> vboIdList;
-	private final int vertexCount;
-	private Texture texture;
-	private Vector3f colour;
+	protected static final Vector3f DEFAULT_COLOUR = new Vector3f(0.0f, 1.0f, 1.0f);
+	protected int vaoId;
+	protected List<Integer> vboIdList;
+	protected int vertexCount;
+	protected Texture texture;
+	protected Vector3f colour;
 
 	public Mesh(float[] positions, float[] textCoords, float[] normals, int[] indices) {
 		FloatBuffer posBuffer = null;
@@ -102,6 +102,9 @@ public class Mesh {
                 MemoryUtil.memFree(indicesBuffer);
             }
         }
+	}
+
+	public Mesh() {
 	}
 
 	public boolean isTextured() {
