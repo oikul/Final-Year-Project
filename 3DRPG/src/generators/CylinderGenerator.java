@@ -11,17 +11,20 @@ public class CylinderGenerator {
 
 	private float[] positions, textCoords, normals;
 	int[] indices;
-	private float angle = 0;
-	private List<Float> positionsList = new ArrayList<Float>();
-	private List<Integer> indicesList = new ArrayList<Integer>();
+	private float angle;
+	private List<Float> positionsList;
+	private List<Integer> indicesList;
 	private Mesh mesh;
-	
+
 	public Mesh makeCylinder(float radiusBottom, float radiusTop, float height, int subdivisions) {
 		float incAngle = (float) ((float) (2 * Math.PI) / (float) subdivisions);
 		Vector3f v0 = new Vector3f();
 		v0.x = 0;
 		v0.y = 0;
 		v0.z = 0;
+		angle = 0;
+		positionsList = new ArrayList<Float>();
+		indicesList = new ArrayList<Integer>();
 		positionsList.add(v0.x);
 		positionsList.add(v0.y);
 		positionsList.add(v0.z);

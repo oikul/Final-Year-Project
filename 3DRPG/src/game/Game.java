@@ -21,60 +21,23 @@ import org.joml.Vector3f;
 import engine.Camera;
 import engine.Entity;
 import engine.IGameLogic;
-import engine.Mesh;
 import engine.MouseInput;
 import engine.Renderer;
 import engine.Shader;
 import engine.Texture;
 import engine.Window;
-import generators.CylinderGenerator;
 import generators.TreeGenerator;
 
 public class Game implements IGameLogic {
 
 	private Shader shader;
-	private float[] vertices = new float[] {
-			// VO
-			-0.5f, 0.5f, 0.5f,
-			// V1
-			-0.5f, -0.5f, 0.5f,
-			// V2
-			0.5f, -0.5f, 0.5f,
-			// V3
-			0.5f, 0.5f, 0.5f,
-			// V4
-			-0.5f, 0.5f, -0.5f,
-			// V5
-			0.5f, 0.5f, -0.5f,
-			// V6
-			-0.5f, -0.5f, -0.5f,
-			// V7
-			0.5f, -0.5f, -0.5f, };
-	private int[] indices = new int[] {
-			// Front face
-			0, 1, 3, 3, 1, 2,
-			// Top Face
-			4, 0, 3, 5, 4, 3,
-			// Right face
-			3, 2, 7, 5, 3, 7,
-			// Left face
-			6, 1, 0, 6, 0, 4,
-			// Bottom face
-			2, 1, 6, 2, 6, 7,
-			// Back face
-			7, 6, 4, 7, 4, 5, };
-	float[] colours = new float[] { 0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.5f, 0.5f, 0.5f, 0.0f,
-			0.0f, 0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.5f, 0.5f, };
-	float[] textCoords = new float[] { 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1,
-			0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1 };
-	float[] normals = new float[] {};
-	private Texture texture;
 	private Entity[] entities;
 	private ArrayList<Entity> entityList;
 	private Camera camera;
 	private Vector3f cameraInc = new Vector3f();
 	private float CAMERA_POS_STEP = 0.0001f, MOUSE_SENSITIVITY = 0.001f;
 	private static Texture t = new Texture();
+	private Random random;
 
 	private final Renderer renderer;
 
@@ -94,12 +57,20 @@ public class Game implements IGameLogic {
 		shader.createUniform("texture_sampler");
 		shader.createUniform("colour");
 		shader.createUniform("useColour");
-		texture = new Texture();
-		texture.loadTexture(getBufferedImage("grass_jungle"));
 		Terrain terrain = new Terrain(1, 1f, 256, 256, 1, 0, 8, 1, 8);
 		entityList.add(terrain.getChunks()[0]);
-		TreeGenerator treeGen = new TreeGenerator(0);
-		Entity[] tree = treeGen.makeTree(3, 30f, 0.4f, 0.95f, 0.8f, 0.95f, 0, 0, 0);
+		random = new Random();
+		TreeGenerator treeGen = new TreeGenerator("X0.4>F+[[X]-X]-F[-FX]+X,X0.4>F-[[X]+X]+F[+FX]-X,X0.4>F*[[X]/X]/F[/FX]*X,X0.4>F/[[X]*X]*F[*FX]/X,F0.6>FF", System.currentTimeMillis());
+		Entity[] tree;
+		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 128, 0, random.nextFloat() * 128);
+		for(int i = 0; i < tree.length; i++){
+			entityList.add(tree[i]);
+		}
+		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 28, 0, random.nextFloat() * 28);
+		for(int i = 0; i < tree.length; i++){
+			entityList.add(tree[i]);
+		}
+		tree = treeGen.makeTree(4, 20f + random.nextFloat() * 20f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f, 0.8f, 0.95f, random.nextFloat() * 28, 0, random.nextFloat() * 28);
 		for(int i = 0; i < tree.length; i++){
 			entityList.add(tree[i]);
 		}

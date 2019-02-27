@@ -12,15 +12,17 @@ public class TreeGenerator {
 
 	private Entity[] tree;
 	private CylinderGenerator cylinder;
+	private LSystemGenerator lSystemGen;
 	private long seed;
 
-	public TreeGenerator(long seed) {
+	public TreeGenerator(String rules, long seed) {
 		this.seed = seed;
+		lSystemGen = new LSystemGenerator(rules, seed);
 	}
 	
-	public Entity[] makeTree(int iterations, float angleIncrement, float baseRadius, float radiusDecrease, float baseHeight, float heightDecrease, float startX, float startY, float startZ){
-		LSystemGenerator gen = new LSystemGenerator("XF", "+-[]", "X0.4>F+[[X]-X]-F[-FX]+X,X0.4>F-[[X]+X]+F[+FX]-X,X0.4>F*[[X]/X]/F[/FX]*X,X0.4>F/[[X]*X]*F[*FX]/X,F0.6>FF", seed);
-		String treeString = gen.repeat(iterations, "X");
+	public Entity[] makeTree(int iterations, float angleIncrementZ, float angleIncrementY, float baseRadius, float radiusDecrease, float baseHeight,
+			float heightDecrease, float startX, float startY, float startZ){
+		String treeString = lSystemGen.repeat(iterations, "X");
 		cylinder = new CylinderGenerator();
 		Vector3f position = new Vector3f(startX, startY, startZ), rotation = new Vector3f(0, 0, 0);
 		Stack<Float> variableSave = new Stack<Float>();
@@ -39,16 +41,16 @@ public class TreeGenerator {
 				baseHeight *= heightDecrease;
 				break;
 			case '+':
-				rotation = new Vector3f(rotation.x, rotation.y, rotation.z + angleIncrement);
+				rotation = new Vector3f(rotation.x, rotation.y, rotation.z + angleIncrementZ);
 				break;
 			case '-':
-				rotation = new Vector3f(rotation.x, rotation.y, rotation.z - angleIncrement);
+				rotation = new Vector3f(rotation.x, rotation.y, rotation.z - angleIncrementZ);
 				break;
 			case '*':
-				rotation = new Vector3f(rotation.x, rotation.y + angleIncrement, rotation.z);
+				rotation = new Vector3f(rotation.x, rotation.y + angleIncrementY, rotation.z);
 				break;
 			case '/':
-				rotation = new Vector3f(rotation.x, rotation.y - angleIncrement, rotation.z);
+				rotation = new Vector3f(rotation.x, rotation.y - angleIncrementY, rotation.z);
 				break;
 			case '[':
 				variableSave.push(rotation.x);
