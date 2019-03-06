@@ -22,11 +22,13 @@ import org.joml.Vector3f;
 import engine.Camera;
 import engine.Entity;
 import engine.IGameLogic;
+import engine.Mesh;
 import engine.MouseInput;
 import engine.Renderer;
 import engine.Shader;
 import engine.Texture;
 import engine.Window;
+import generators.CylinderGenerator;
 import generators.TreeGenerator;
 import generators.VoronoiGenerator;
 
@@ -74,8 +76,14 @@ public class Game implements IGameLogic {
 			}
 		}
 		VoronoiGenerator voronoi = new VoronoiGenerator(0, System.currentTimeMillis());
-		Entity v = new Entity(voronoi.generateVoronoi(6, 0f, 256f, 0f, 256f, 0, 128f));
-		//entityList.add(v);
+		Entity v = new Entity(voronoi.generateVoronoi(90, -128f, 128f, -128f, 128f, 0, 256f));
+		entityList.add(v);
+		CylinderGenerator cylinder = new CylinderGenerator();
+		Mesh cy = cylinder.makeCylinder(4, 4, 8, 6);
+		cy.setColour(new Vector3f(0.5f, 0f, 0.5f));
+		Entity c = new Entity(cy);
+		c.setPosition(1, 2, 2);
+		entityList.add(c);
 		entities = new Entity[entityList.size()];
 		for (Entity e : entityList) {
 			entities[entityList.indexOf(e)] = e;
@@ -113,19 +121,19 @@ public class Game implements IGameLogic {
 		// }
 		cameraInc.set(0, 0, 0);
 		if (window.isKeyPressed(GLFW_KEY_W)) {
-			cameraInc.z = -1;
+			cameraInc.z = -2;
 		} else if (window.isKeyPressed(GLFW_KEY_S)) {
-			cameraInc.z = 1;
+			cameraInc.z = 2;
 		}
 		if (window.isKeyPressed(GLFW_KEY_A)) {
-			cameraInc.x = -1;
+			cameraInc.x = -2;
 		} else if (window.isKeyPressed(GLFW_KEY_D)) {
-			cameraInc.x = 1;
+			cameraInc.x = 2;
 		}
 		if (window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
-			cameraInc.y = -1;
+			cameraInc.y = -2;
 		} else if (window.isKeyPressed(GLFW_KEY_SPACE)) {
-			cameraInc.y = 1;
+			cameraInc.y = 2;
 		}
 
 	}

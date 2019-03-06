@@ -22,6 +22,7 @@ import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glCullFace;
 import static org.lwjgl.opengl.GL11.glPolygonMode;
 
 import org.lwjgl.opengl.GL;
@@ -67,8 +68,9 @@ public class Window {
 			glfwSwapInterval(1);
 		}
 		glEnable(GL11.GL_DEPTH_TEST);
-		//glEnable(GL11.GL_CULL_FACE);
-		glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+		glEnable(GL11.GL_CULL_FACE);
+		glCullFace(GL11.GL_FRONT);
+		//glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 		glfwShowWindow(window);
 	}
 

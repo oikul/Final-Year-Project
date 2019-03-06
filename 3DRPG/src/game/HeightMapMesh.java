@@ -74,8 +74,8 @@ public class HeightMapMesh {
 		Vector3f v41 = new Vector3f();
 		List<Float> normals = new ArrayList<Float>();
 		Vector3f normal = new Vector3f();
-		for (int row = 0; row < height; row++) {
-			for (int col = 0; col < width; col++) {
+		for (int row = 1; row < height - 1; row++) {
+			for (int col = 1; col < width - 1; col++) {
 				if (row > 0 && row < height - 1 && col > 0 && col < width - 1) {
 					int i0 = row * width * 3 + col * 3;
 					v0.x = positions[i0];
@@ -125,10 +125,9 @@ public class HeightMapMesh {
 					normal.y = 1;
 					normal.z = 0;
 				}
-				normal.normalize();
-				normals.add(normal.x);
-				normals.add(normal.y);
-				normals.add(normal.z);
+				normals.add(normal.x * -1);
+				normals.add(normal.y * -1);
+				normals.add(normal.z * -1);
 			}
 		}
 		return listToArray(normals);

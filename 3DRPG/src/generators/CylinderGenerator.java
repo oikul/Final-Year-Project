@@ -68,13 +68,13 @@ public class CylinderGenerator {
 		for(int i = 0; i < positions.length / 3; i++){
 			if(i == 0){
 				for(int j = 1; j < positions.length / 6; j++){
-					indicesList.add(i);
-					indicesList.add(j);
 					if(j < positions.length / 6 - 1){
 						indicesList.add(j+1);
 					}else{
 						indicesList.add(1);
 					}
+					indicesList.add(j);
+					indicesList.add(i);
 				}
 			}else if(i == positions.length / 6){
 				for(int j = positions.length / 6; j < positions.length / 3; j++){
@@ -95,17 +95,18 @@ public class CylinderGenerator {
 				}
 				indicesList.add(i+positions.length/6);
 			}else if(i > positions.length / 6 && i < positions.length / 3){
-				indicesList.add(i);
-				if(i + 1 == positions.length / 3){
-					indicesList.add(positions.length / 6 + 1);
-				}else{
-					indicesList.add(i + 1);
-				}
 				if(i - positions.length / 6 + 1 == positions.length / 6){
 					indicesList.add(1);
 				}else{
 					indicesList.add(i - positions.length / 6 + 1);
 				}
+				if(i + 1 == positions.length / 3){
+					indicesList.add(positions.length / 6 + 1);
+				}else{
+					indicesList.add(i + 1);
+				}
+				
+				indicesList.add(i);
 			}
 		}
 		indices = new int[indicesList.size()];
