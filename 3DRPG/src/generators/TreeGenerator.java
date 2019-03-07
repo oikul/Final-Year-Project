@@ -7,13 +7,15 @@ import java.util.Stack;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import engine.Entity;
-import engine.Material;
-import engine.Mesh;
+import mesh.Entity;
+import mesh.Material;
+import mesh.Mesh;
 
 public class TreeGenerator {
 
 	private Entity[] tree;
+	private float[] positions, textCoords, normals;
+	private int[] indices;
 	private CylinderGenerator cylinder;
 	private LSystemGenerator lSystemGen;
 

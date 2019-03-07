@@ -1,4 +1,4 @@
-package engine;
+package mesh;
 
 import org.joml.Vector4f;
 

@@ -1,6 +1,7 @@
 package engine;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
+import static org.lwjgl.glfw.GLFW.glfwSetCursorPos;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
@@ -78,8 +79,9 @@ public class GameEngine implements Runnable {
 	}
 
 	private void handleInput() {
-		mouseInput.input(window);
+		mouseInput.input(window, width, height);
 		gameLogic.input(window, mouseInput);
+		glfwSetCursorPos(window.getWindowHandle(), width / 2, height / 2);
 		if (window.isKeyPressed(GLFW_KEY_ESCAPE)) {
 			window.close();
 		}

@@ -1,10 +1,15 @@
 package engine;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_HIDDEN;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_DISABLED;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_2;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.glfwSetCursorEnterCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetCursorPos;
 
 import org.joml.Vector2d;
 import org.joml.Vector2f;
@@ -33,13 +38,14 @@ public class MouseInput {
 			leftButtonPressed = button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS;
 			rightButtonPressed = button == GLFW_MOUSE_BUTTON_2 && action == GLFW_PRESS;
 		});
+		glfwSetInputMode(window.getWindowHandle(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	}
 	
 	public Vector2f getDisplVec(){
 		return displVec;
 	}
 	
-	public void input(Window window){
+	public void input(Window window, int width, int height){
 		displVec.x = 0;
 		displVec.y = 0;
 		if(previousPos.x > 0 && previousPos.y > 0 && inWindow) {
@@ -56,6 +62,7 @@ public class MouseInput {
 		}
 		previousPos.x = currentPos.x;
 		previousPos.y = currentPos.y;
+		//glfwSetCursorPos(window.getWindowHandle(), width / 2, height / 2);
 	}
 	
 	public boolean isLeftButtonPressed(){

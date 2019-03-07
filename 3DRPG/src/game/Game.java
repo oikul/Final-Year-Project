@@ -20,17 +20,18 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import engine.Camera;
-import engine.Entity;
 import engine.IGameLogic;
 import engine.MouseInput;
 import engine.Renderer;
 import engine.Shader;
-import engine.Texture;
 import engine.Window;
+import generators.NameGenerator;
 import generators.TreeGenerator;
 import generators.VoronoiGenerator;
 import lighting.DirectionalLight;
 import lighting.PointLight;
+import mesh.Entity;
+import mesh.Texture;
 
 public class Game implements IGameLogic {
 
@@ -105,6 +106,10 @@ public class Game implements IGameLogic {
 		for (Entity e : entityList) {
 			entities[entityList.indexOf(e)] = e;
 		}
+//		NameGenerator names = new NameGenerator(System.currentTimeMillis());
+//		for(int i = 0; i < 100; i++){
+//			System.out.println(names.getName(random.nextInt(3) + 2));
+//		}
 	}
 
 	public static BufferedImage getBufferedImage(String path) {
@@ -186,7 +191,6 @@ public class Game implements IGameLogic {
 				cameraInc.z * CAMERA_POS_STEP);
 		Vector2f rotVec = mouseInput.getDisplVec();
 		camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
-
 	}
 
 	@Override

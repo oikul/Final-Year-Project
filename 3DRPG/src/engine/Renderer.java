@@ -11,6 +11,7 @@ import org.joml.Vector4f;
 
 import lighting.DirectionalLight;
 import lighting.PointLight;
+import mesh.Entity;
 
 public class Renderer {
 

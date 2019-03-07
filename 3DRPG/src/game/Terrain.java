@@ -1,6 +1,7 @@
 package game;
 
-import engine.Entity;
+import mesh.Entity;
+import mesh.HeightMapMesh;
 
 public class Terrain {
 

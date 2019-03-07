@@ -41,6 +41,7 @@ import org.lwjgl.system.MemoryStack;
 
 import lighting.DirectionalLight;
 import lighting.PointLight;
+import mesh.Material;
 
 public class Shader {
 

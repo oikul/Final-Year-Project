@@ -1,4 +1,4 @@
-package game;
+package mesh;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +6,6 @@ import java.util.List;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import engine.Material;
-import engine.Mesh;
 import generators.PerlinNoiseGenerator;
 
 public class HeightMapMesh {

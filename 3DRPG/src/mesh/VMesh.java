@@ -1,4 +1,4 @@
-package game;
+package mesh;
 
 import static org.lwjgl.opengl.GL11.GL_LINES;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
@@ -9,9 +9,6 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
-
-import engine.Mesh;
-import engine.Texture;
 
 public class VMesh extends Mesh {
 	

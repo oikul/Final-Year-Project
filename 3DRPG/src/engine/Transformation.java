@@ -2,6 +2,8 @@ package engine;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import mesh.Entity;
+
 public class Transformation {
 
 	private final Matrix4f projectionMatrix, worldMatrix, viewMatrix, modelViewMatrix;

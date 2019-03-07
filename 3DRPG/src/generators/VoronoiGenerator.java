@@ -6,8 +6,8 @@ import java.util.Random;
 
 import org.joml.Vector4f;
 
-import engine.Material;
-import game.VMesh;
+import mesh.Material;
+import mesh.VMesh;
 import voronoi.GraphEdge;
 import voronoi.Voronoi;
 

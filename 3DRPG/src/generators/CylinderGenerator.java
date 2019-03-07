@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.joml.Vector3f;
 
-import engine.Mesh;
+import mesh.Mesh;
 
 public class CylinderGenerator {
 
