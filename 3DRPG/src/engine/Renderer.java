@@ -6,6 +6,8 @@ import static org.lwjgl.opengl.GL11.glClear;
 
 import org.joml.Math;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 public class Renderer {
 
@@ -14,9 +16,11 @@ public class Renderer {
 	private final float Z_NEAR = 0.01f;
 	private final float Z_FAR = 1000.0f;
 	private Transformation transformation;
+	private float specularPower;
 	
 	public Renderer(){
 		transformation = new Transformation();
+		specularPower = 100f;
 	}
 
 	public void init(Window window) throws Exception {
@@ -28,19 +32,28 @@ public class Renderer {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	public void render(Window window, Shader shader, Entity entities[], Camera camera) {
+	public void render(Window window, Shader shader, Entity entities[], Camera camera, Vector3f ambientLight, PointLight pointLight) {
 		clear();
 		shader.useShader();		
 		projection = transformation.getProjectionMatrix(FOV, window.getWidth(), window.getHeight(), Z_NEAR, Z_FAR);
 		shader.setUniform("projectionMatrix", projection);
 		shader.setUniform("texture_sampler", 0);
 		view = transformation.getViewMatrix(camera);
+		shader.setUniform("ambientLight", ambientLight);
+		shader.setUniform("specularPower", specularPower);
+		PointLight currPointLight = new PointLight(pointLight);
+        Vector3f lightPos = currPointLight.getPosition();
+        Vector4f aux = new Vector4f(lightPos, 1);
+        aux.mul(view);
+        lightPos.x = aux.x;
+        lightPos.y = aux.y;
+        lightPos.z = aux.z;
+        shader.setUniform("pointLight", currPointLight);
 		for (Entity e : entities) {
 			if (e != null) {
 				Matrix4f modelViewMatrix = transformation.getModelViewMatrix(e, view);
 				shader.setUniform("modelViewMatrix", modelViewMatrix);
-				shader.setUniform("colour", e.getMesh().getColour());
-				shader.setUniform("useColour", e.getMesh().isTextured() ? 0 : 1);
+				shader.setUniform("material", e.getMesh().getMaterial());
 				e.getMesh().render();
 			}
 		}

@@ -18,12 +18,15 @@ import javax.imageio.ImageIO;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import engine.Camera;
 import engine.Entity;
 import engine.IGameLogic;
+import engine.Material;
 import engine.Mesh;
 import engine.MouseInput;
+import engine.PointLight;
 import engine.Renderer;
 import engine.Shader;
 import engine.Texture;
@@ -42,6 +45,8 @@ public class Game implements IGameLogic {
 	private float CAMERA_POS_STEP = 0.0001f, MOUSE_SENSITIVITY = 0.001f;
 	private static Texture t = new Texture();
 	private Random random;
+	private Vector3f ambientLight;
+	private PointLight pointLight;
 
 	private final Renderer renderer;
 
@@ -59,8 +64,10 @@ public class Game implements IGameLogic {
 		shader.createUniform("projectionMatrix");
 		shader.createUniform("modelViewMatrix");
 		shader.createUniform("texture_sampler");
-		shader.createUniform("colour");
-		shader.createUniform("useColour");
+		shader.createUniform("ambientLight");
+		shader.createUniform("specularPower");
+		shader.createPointLightUniform("pointLight");
+		shader.createMaterialUniform("material");
 		Terrain terrain = new Terrain(1, 1f, 256, 256, 1, 0, 4, 1, 8);
 		entityList.add(terrain.getChunks()[0]);
 		random = new Random();
@@ -80,10 +87,17 @@ public class Game implements IGameLogic {
 		entityList.add(v);
 		CylinderGenerator cylinder = new CylinderGenerator();
 		Mesh cy = cylinder.makeCylinder(4, 4, 8, 6);
-		cy.setColour(new Vector3f(0.5f, 0f, 0.5f));
+		cy.setMaterial(new Material(new Vector4f(0.5f, 0f, 0.5f, 1f), 0.5f));
 		Entity c = new Entity(cy);
 		c.setPosition(1, 2, 2);
 		entityList.add(c);
+		ambientLight = new Vector3f(0.8f, 0.8f, 0.8f);
+		Vector3f lightColour = new Vector3f(1, 1, 1);
+        Vector3f lightPosition = new Vector3f(0, 0, 1);
+        float lightIntensity = 1.0f;
+        pointLight = new PointLight(lightColour, lightPosition, lightIntensity);
+        PointLight.Attenuation att = new PointLight.Attenuation(0.0f, 0.0f, 1.0f);
+        pointLight.setAttenuation(att);
 		entities = new Entity[entityList.size()];
 		for (Entity e : entityList) {
 			entities[entityList.indexOf(e)] = e;
@@ -159,7 +173,7 @@ public class Game implements IGameLogic {
 			window.setResized(false);
 		}
 		renderer.clear();
-		renderer.render(window, shader, entities, camera);
+		renderer.render(window, shader, entities, camera, ambientLight, pointLight);
 	}
 
 	@Override

@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.joml.Vector3f;
+import org.joml.Vector4f;
 
+import engine.Material;
 import game.VMesh;
 import voronoi.GraphEdge;
 import voronoi.Voronoi;
@@ -54,7 +55,7 @@ public class VoronoiGenerator {
 		textCoords = new float[indices.length];
 		normals = new float[indices.length];
 		VMesh mesh = new VMesh(positions, textCoords, normals, indices);
-		mesh.setColour(new Vector3f(1.0f, 0.0f, 0.0f));
+		mesh.setMaterial(new Material(new Vector4f(1.0f, 0.0f, 0.0f, 1f), 0.5f));
 		return mesh;
 	}
 	

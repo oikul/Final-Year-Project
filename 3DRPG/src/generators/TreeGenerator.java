@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Stack;
 
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import engine.Entity;
+import engine.Material;
 import engine.Mesh;
 
 public class TreeGenerator {
@@ -30,7 +32,7 @@ public class TreeGenerator {
 			switch (treeString.charAt(i)) {
 			case 'F':
 				Mesh m = cylinder.makeCylinder(baseRadius, baseRadius * radiusDecrease, baseHeight, 6);
-				m.setColour(new Vector3f(1.0f, 0.7f, 0.4f));
+				m.setMaterial(new Material(new Vector4f(160.0f / 255.0f, 82.0f / 255.0f, 45.0f / 255.0f, 1f), 0.9f));
 				treeParts.add(new Entity(m));
 				treeParts.get(treeParts.size() - 1).setRotation(rotation);
 				treeParts.get(treeParts.size() - 1).setPosition(position);

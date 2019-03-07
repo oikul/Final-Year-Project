@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
+import engine.Material;
 import engine.Mesh;
 import generators.ValueNoiseGenerator;
 
@@ -48,6 +50,7 @@ public class HeightMapMesh {
 		int[] indicesArray = indices.stream().mapToInt(i -> i).toArray();
 		float[] normals = calcNormals(posArray, width, height);
 		this.mesh = new Mesh(posArray, textArray, normals, indicesArray);
+		this.mesh.setMaterial(new Material(new Vector4f(0.3f, 1, 0.3f, 1f), 0.5f));
 	}
 
 	public Mesh getMesh() {
