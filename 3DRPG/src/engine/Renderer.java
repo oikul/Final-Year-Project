@@ -9,6 +9,9 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import lighting.DirectionalLight;
+import lighting.PointLight;
+
 public class Renderer {
 
 	private Matrix4f projection, view;
@@ -20,7 +23,7 @@ public class Renderer {
 	
 	public Renderer(){
 		transformation = new Transformation();
-		specularPower = 100f;
+		specularPower = 10f;
 	}
 
 	public void init(Window window) throws Exception {
@@ -32,7 +35,7 @@ public class Renderer {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	public void render(Window window, Shader shader, Entity entities[], Camera camera, Vector3f ambientLight, PointLight pointLight) {
+	public void render(Window window, Shader shader, Entity entities[], Camera camera, Vector3f ambientLight, PointLight pointLight, DirectionalLight directionalLight) {
 		clear();
 		shader.useShader();		
 		projection = transformation.getProjectionMatrix(FOV, window.getWidth(), window.getHeight(), Z_NEAR, Z_FAR);
@@ -49,6 +52,11 @@ public class Renderer {
         lightPos.y = aux.y;
         lightPos.z = aux.z;
         shader.setUniform("pointLight", currPointLight);
+        DirectionalLight currDirLight = new DirectionalLight(directionalLight);
+        Vector4f dir = new Vector4f(currDirLight.getDirection(), 0);
+        dir.mul(view);
+        currDirLight.setDirection(new Vector3f(dir.x, dir.y, dir.z));
+        shader.setUniform("directionalLight", currDirLight);
 		for (Entity e : entities) {
 			if (e != null) {
 				Matrix4f modelViewMatrix = transformation.getModelViewMatrix(e, view);

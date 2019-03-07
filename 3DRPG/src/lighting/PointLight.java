@@ -1,4 +1,4 @@
-package engine;
+package lighting;
 
 import org.joml.Vector3f;
 

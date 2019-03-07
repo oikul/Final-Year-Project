@@ -97,7 +97,7 @@ public class GameEngine implements Runnable {
 	}
 
 	private void sync(double loopStartTime) {
-		float loopSlot = 1f / 60;
+		float loopSlot = 1f / 30;
 		double endTime = loopStartTime + loopSlot;
 		while (System.currentTimeMillis() < endTime) {
 			try {

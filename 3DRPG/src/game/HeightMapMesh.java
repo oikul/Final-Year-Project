@@ -8,7 +8,7 @@ import org.joml.Vector4f;
 
 import engine.Material;
 import engine.Mesh;
-import generators.ValueNoiseGenerator;
+import generators.PerlinNoiseGenerator;
 
 public class HeightMapMesh {
 
@@ -16,16 +16,19 @@ public class HeightMapMesh {
 	private Mesh mesh;
 
 	public HeightMapMesh(int width, int height, int textInc, long seed, float amplitude, float roughness, int octaves) {
-		ValueNoiseGenerator generator = new ValueNoiseGenerator(seed, amplitude, roughness, octaves);
+		//ValueNoiseGenerator generator = new ValueNoiseGenerator(seed, amplitude, roughness, octaves);
+		PerlinNoiseGenerator generator = new PerlinNoiseGenerator(seed);
 		float incx = Math.abs(startX * 2) / (width - 1);
 		float incz = Math.abs(startZ * 2) / (height - 1);
 		List<Float> positions = new ArrayList<Float>();
 		List<Float> textCoords = new ArrayList<Float>();
 		List<Integer> indices = new ArrayList<Integer>();
+		float[][] noise = generator.getPerlinNoise(width, height, 2, 2);
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
 				positions.add(startX + col + incx);
-				positions.add(generator.generateHeight(col, row) - (amplitude * octaves / 2));
+//				positions.add(generator.generateHeight(col, row) - (amplitude * octaves / 2));
+				positions.add(noise[col][row] * amplitude);
 				positions.add(startZ + row + incz);
 
 				textCoords.add((float) textInc * (float) col / (float) width);
@@ -50,7 +53,7 @@ public class HeightMapMesh {
 		int[] indicesArray = indices.stream().mapToInt(i -> i).toArray();
 		float[] normals = calcNormals(posArray, width, height);
 		this.mesh = new Mesh(posArray, textArray, normals, indicesArray);
-		this.mesh.setMaterial(new Material(new Vector4f(0.3f, 1, 0.3f, 1f), 0.5f));
+		this.mesh.setMaterial(new Material(new Vector4f(0.3f, 1, 0.3f, 1f), 0.2f));
 	}
 
 	public Mesh getMesh() {
@@ -77,8 +80,8 @@ public class HeightMapMesh {
 		Vector3f v41 = new Vector3f();
 		List<Float> normals = new ArrayList<Float>();
 		Vector3f normal = new Vector3f();
-		for (int row = 1; row < height - 1; row++) {
-			for (int col = 1; col < width - 1; col++) {
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
 				if (row > 0 && row < height - 1 && col > 0 && col < width - 1) {
 					int i0 = row * width * 3 + col * 3;
 					v0.x = positions[i0];
@@ -128,9 +131,10 @@ public class HeightMapMesh {
 					normal.y = 1;
 					normal.z = 0;
 				}
-				normals.add(normal.x * -1);
-				normals.add(normal.y * -1);
-				normals.add(normal.z * -1);
+				normal.normalize();
+				normals.add(normal.x);
+				normals.add(normal.y);
+				normals.add(normal.z);
 			}
 		}
 		return listToArray(normals);

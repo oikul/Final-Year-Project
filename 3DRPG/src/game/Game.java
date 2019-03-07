@@ -18,22 +18,19 @@ import javax.imageio.ImageIO;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import engine.Camera;
 import engine.Entity;
 import engine.IGameLogic;
-import engine.Material;
-import engine.Mesh;
 import engine.MouseInput;
-import engine.PointLight;
 import engine.Renderer;
 import engine.Shader;
 import engine.Texture;
 import engine.Window;
-import generators.CylinderGenerator;
 import generators.TreeGenerator;
 import generators.VoronoiGenerator;
+import lighting.DirectionalLight;
+import lighting.PointLight;
 
 public class Game implements IGameLogic {
 
@@ -47,6 +44,8 @@ public class Game implements IGameLogic {
 	private Random random;
 	private Vector3f ambientLight;
 	private PointLight pointLight;
+	private DirectionalLight directionalLight;
+	private float lightAngle;
 
 	private final Renderer renderer;
 
@@ -54,6 +53,7 @@ public class Game implements IGameLogic {
 		renderer = new Renderer();
 		camera = new Camera();
 		entityList = new ArrayList<Entity>();
+		lightAngle = -90;
 	}
 
 	@Override
@@ -67,8 +67,9 @@ public class Game implements IGameLogic {
 		shader.createUniform("ambientLight");
 		shader.createUniform("specularPower");
 		shader.createPointLightUniform("pointLight");
+		shader.createDirectionalLightUniform("directionalLight");
 		shader.createMaterialUniform("material");
-		Terrain terrain = new Terrain(1, 1f, 256, 256, 1, 0, 4, 1, 8);
+		Terrain terrain = new Terrain(1, 1f, 256, 256, 1, 0, 6, 1f, 4);
 		entityList.add(terrain.getChunks()[0]);
 		random = new Random();
 		TreeGenerator treeGen = new TreeGenerator(
@@ -85,19 +86,21 @@ public class Game implements IGameLogic {
 		VoronoiGenerator voronoi = new VoronoiGenerator(0, System.currentTimeMillis());
 		Entity v = new Entity(voronoi.generateVoronoi(90, -128f, 128f, -128f, 128f, 0, 256f));
 		entityList.add(v);
-		CylinderGenerator cylinder = new CylinderGenerator();
-		Mesh cy = cylinder.makeCylinder(4, 4, 8, 6);
-		cy.setMaterial(new Material(new Vector4f(0.5f, 0f, 0.5f, 1f), 0.5f));
-		Entity c = new Entity(cy);
-		c.setPosition(1, 2, 2);
-		entityList.add(c);
-		ambientLight = new Vector3f(0.8f, 0.8f, 0.8f);
+//		CylinderGenerator cylinder = new CylinderGenerator();
+//		Mesh cy = cylinder.makeCylinder(4, 4, 8, 6);
+//		cy.setMaterial(new Material(new Vector4f(0.5f, 0f, 0.5f, 1f), 0.5f));
+//		Entity c = new Entity(cy);
+//		c.setPosition(1, 2, 2);
+//		entityList.add(c);
+		ambientLight = new Vector3f(0.3f, 0.3f, 0.3f);
 		Vector3f lightColour = new Vector3f(1, 1, 1);
-        Vector3f lightPosition = new Vector3f(0, 0, 1);
+        Vector3f lightPosition = new Vector3f(0, 5, 0);
         float lightIntensity = 1.0f;
         pointLight = new PointLight(lightColour, lightPosition, lightIntensity);
-        PointLight.Attenuation att = new PointLight.Attenuation(0.0f, 0.0f, 1.0f);
+        PointLight.Attenuation att = new PointLight.Attenuation(0f, 0f, 0.1f);
         pointLight.setAttenuation(att);
+        lightPosition = new Vector3f(-1, 0, 0);
+        directionalLight = new DirectionalLight(lightColour, lightPosition, lightIntensity);
 		entities = new Entity[entityList.size()];
 		for (Entity e : entityList) {
 			entities[entityList.indexOf(e)] = e;
@@ -159,6 +162,26 @@ public class Game implements IGameLogic {
 		// rotation = 0;
 		// }
 		// test.setRotation(rotation, rotation, rotation);
+		lightAngle += 0.0005f;
+		if(lightAngle > 90) {
+			directionalLight.setIntensity(0);
+			if(lightAngle >= 360){
+				lightAngle = -90;
+			}
+		} else if (lightAngle <= -80 || lightAngle >= 80) {
+			float factor = 1 - (float)(Math.abs(lightAngle) - 80) / 10.0f;
+			directionalLight.setIntensity(factor);
+			directionalLight.getColor().y = Math.max(factor, 0.9f);
+			directionalLight.getColor().z = Math.max(factor, 0.5f);
+		} else {
+			directionalLight.setIntensity(1);
+			directionalLight.getColor().x = 1;
+			directionalLight.getColor().y = 1;
+			directionalLight.getColor().z = 1;
+		}
+		double angRad = Math.toRadians(lightAngle);
+		directionalLight.getDirection().x = (float) Math.sin(angRad);
+		directionalLight.getDirection().y = (float) Math.cos(angRad);
 		camera.movePosition(cameraInc.x * CAMERA_POS_STEP, cameraInc.y * CAMERA_POS_STEP,
 				cameraInc.z * CAMERA_POS_STEP);
 		Vector2f rotVec = mouseInput.getDisplVec();
@@ -173,7 +196,7 @@ public class Game implements IGameLogic {
 			window.setResized(false);
 		}
 		renderer.clear();
-		renderer.render(window, shader, entities, camera, ambientLight, pointLight);
+		renderer.render(window, shader, entities, camera, ambientLight, pointLight, directionalLight);
 	}
 
 	@Override

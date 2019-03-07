@@ -39,6 +39,9 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.system.MemoryStack;
 
+import lighting.DirectionalLight;
+import lighting.PointLight;
+
 public class Shader {
 
 	private int vertexShader, fragmentShader, program;
@@ -180,6 +183,12 @@ public class Shader {
 		createUniform(uniformName + ".att.exponent");
 	}
 	
+	public void createDirectionalLightUniform(String uniformName) throws Exception {
+		createUniform(uniformName + ".colour");
+		createUniform(uniformName + ".direction");
+		createUniform(uniformName + ".intensity");
+	}
+	
 	public void createMaterialUniform(String uniformName) throws Exception {
 		createUniform(uniformName + ".ambient");
 		createUniform(uniformName + ".diffuse");
@@ -204,7 +213,12 @@ public class Shader {
 		setUniform(uniformName + ".specular", material.getSpecularColour());
 		setUniform(uniformName + ".hasTexture", material.isTextured() ? 1 : 0);
 		setUniform(uniformName + ".reflectance", material.getReflectance());
-		
+	}
+	
+	public void setUniform(String uniformName, DirectionalLight dirLight){
+		setUniform(uniformName + ".colour", dirLight.getColor());
+		setUniform(uniformName + ".direction", dirLight.getDirection());
+		setUniform(uniformName + ".intensity", dirLight.getIntensity());
 	}
 
 }
