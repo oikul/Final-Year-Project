@@ -14,8 +14,6 @@ import mesh.Mesh;
 public class TreeGenerator {
 
 	private Entity[] tree;
-	private float[] positions, textCoords, normals;
-	private int[] indices;
 	private CylinderGenerator cylinder;
 	private LSystemGenerator lSystemGen;
 
