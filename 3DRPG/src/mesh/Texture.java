@@ -19,12 +19,23 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.BufferUtils;
 
+import game.Game;
+
 public class Texture {
 	
 	private final int BYTES_PER_PIXEL = 4;
 	private int textureID;
+	private BufferedImage image;
 	
-	public int loadTexture(BufferedImage image){
+	public Texture(String path){
+		image = Game.getBufferedImage(path);
+		loadTexture();
+	}
+	
+	public Texture(){
+	}
+	
+	public int loadTexture(){
 		int[] pixels = new int[image.getWidth() * image.getHeight()];
 		image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
 		ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * BYTES_PER_PIXEL);
@@ -55,5 +66,12 @@ public class Texture {
 	public void cleanup(){
 		glDeleteTextures(textureID);
 	}
+	
+	public int getWidth(){
+		return image.getWidth();
+	}
 
+	public int getHeight(){
+		return image.getHeight();
+	}
 }

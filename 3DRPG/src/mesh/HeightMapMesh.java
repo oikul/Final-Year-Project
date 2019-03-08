@@ -6,27 +6,40 @@ import java.util.List;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import game.Game;
 import generators.PerlinNoiseGenerator;
+import generators.ValueNoiseGenerator;
 
 public class HeightMapMesh {
 
 	private static final float startX = -0.5f, startZ = -0.5f;
 	private Mesh mesh;
 
-	public HeightMapMesh(int width, int height, int textInc, long seed, float amplitude, float roughness, int octaves) {
-		//ValueNoiseGenerator generator = new ValueNoiseGenerator(seed, amplitude, roughness, octaves);
-		PerlinNoiseGenerator generator = new PerlinNoiseGenerator(seed);
+	public HeightMapMesh(int width, int height, int textInc, long seed, float amplitude, float roughness, int voctaves, int poctave1, int poctave2, boolean perlinorvalue) {
+		PerlinNoiseGenerator pGenerator = null;
+		ValueNoiseGenerator vGenerator = null;
+		if(perlinorvalue){
+			pGenerator = new PerlinNoiseGenerator(seed);
+		}else{
+			vGenerator = new ValueNoiseGenerator(seed, amplitude, roughness, voctaves);
+		}
 		float incx = Math.abs(startX * 2) / (width - 1);
 		float incz = Math.abs(startZ * 2) / (height - 1);
 		List<Float> positions = new ArrayList<Float>();
 		List<Float> textCoords = new ArrayList<Float>();
 		List<Integer> indices = new ArrayList<Integer>();
-		float[][] noise = generator.getPerlinNoise(width, height, 2, 2);
+		float[][] noise = new float[0][0];
+		if(perlinorvalue){
+			noise = pGenerator.getPerlinNoise(width, height, poctave1, poctave2);
+		}
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
 				positions.add(startX + col + incx);
-//				positions.add(generator.generateHeight(col, row) - (amplitude * octaves / 2));
-				positions.add(noise[col][row] * amplitude);
+				if(perlinorvalue){
+					positions.add(noise[col][row] * amplitude);	
+				}else{
+					positions.add(vGenerator.generateHeight(col, row) - (amplitude * voctaves / 2));
+				}
 				positions.add(startZ + row + incz);
 
 				textCoords.add((float) textInc * (float) col / (float) width);
@@ -51,7 +64,7 @@ public class HeightMapMesh {
 		int[] indicesArray = indices.stream().mapToInt(i -> i).toArray();
 		float[] normals = calcNormals(posArray, width, height);
 		this.mesh = new Mesh(posArray, textArray, normals, indicesArray);
-		this.mesh.setMaterial(new Material(new Vector4f(0.3f, 1, 0.3f, 1f), 0.2f));
+		this.mesh.setMaterial(new Material(new Texture("grass"), 0f));
 	}
 
 	public Mesh getMesh() {

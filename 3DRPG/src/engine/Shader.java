@@ -41,6 +41,7 @@ import org.lwjgl.system.MemoryStack;
 
 import lighting.DirectionalLight;
 import lighting.PointLight;
+import lighting.SpotLight;
 import mesh.Material;
 
 public class Shader {
@@ -184,11 +185,30 @@ public class Shader {
 		createUniform(uniformName + ".att.exponent");
 	}
 	
+	public void createPointLightListUniform(String uniformName, int size) throws Exception {
+        for (int i = 0; i < size; i++) {
+            createPointLightUniform(uniformName + "[" + i + "]");
+        }
+    }
+	
 	public void createDirectionalLightUniform(String uniformName) throws Exception {
 		createUniform(uniformName + ".colour");
 		createUniform(uniformName + ".direction");
 		createUniform(uniformName + ".intensity");
 	}
+	
+	public void createSpotLightUniform(String uniformName) throws Exception {
+		createPointLightUniform(uniformName + ".pl");
+		createUniform(uniformName + ".conedir");
+		createUniform(uniformName + ".cutoff");
+	}
+	
+	public void createSpotLightListUniform(String uniformName, int size) throws Exception {
+        for (int i = 0; i < size; i++) {
+            createSpotLightUniform(uniformName + "[" + i + "]");
+        }
+    }
+
 	
 	public void createMaterialUniform(String uniformName) throws Exception {
 		createUniform(uniformName + ".ambient");
@@ -208,6 +228,17 @@ public class Shader {
 		setUniform(uniformName + ".att.exponent", att.getExponent());
 	}
 	
+	public void setUniform(String uniformName, PointLight pointLight, int pos) {
+        setUniform(uniformName + "[" + pos + "]", pointLight);
+    }
+	
+	public void setUniform(String uniformName, PointLight[] pointLights) {
+        int numLights = pointLights != null ? pointLights.length : 0;
+        for (int i = 0; i < numLights; i++) {
+            setUniform(uniformName, pointLights[i], i);
+        }
+    }
+	
 	public void setUniform(String uniformName, Material material){
 		setUniform(uniformName + ".ambient", material.getAmbientColour());
 		setUniform(uniformName + ".diffuse", material.getDiffuseColour());
@@ -221,5 +252,22 @@ public class Shader {
 		setUniform(uniformName + ".direction", dirLight.getDirection());
 		setUniform(uniformName + ".intensity", dirLight.getIntensity());
 	}
+	
+	public void setUniform(String uniformName, SpotLight spotLight) {
+		setUniform(uniformName + ".pl", spotLight.getPointLight());
+        setUniform(uniformName + ".conedir", spotLight.getConeDirection());
+        setUniform(uniformName + ".cutoff", spotLight.getCutOff());
+	}
+	
+	public void setUniform(String uniformName, SpotLight[] spotLights) {
+        int numLights = spotLights != null ? spotLights.length : 0;
+        for (int i = 0; i < numLights; i++) {
+            setUniform(uniformName, spotLights[i], i);
+        }
+    }
+
+    public void setUniform(String uniformName, SpotLight spotLight, int pos) {
+        setUniform(uniformName + "[" + pos + "]", spotLight);
+    }
 
 }

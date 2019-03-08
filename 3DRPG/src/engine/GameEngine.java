@@ -81,7 +81,6 @@ public class GameEngine implements Runnable {
 	private void handleInput() {
 		mouseInput.input(window, width, height);
 		gameLogic.input(window, mouseInput);
-		glfwSetCursorPos(window.getWindowHandle(), width / 2, height / 2);
 		if (window.isKeyPressed(GLFW_KEY_ESCAPE)) {
 			window.close();
 		}
