@@ -29,7 +29,7 @@ public class Texture {
 	
 	public Texture(String path){
 		image = Game.getBufferedImage(path);
-		loadTexture();
+		textureID = loadTexture();
 	}
 	
 	public Texture(){

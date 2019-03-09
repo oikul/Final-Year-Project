@@ -48,7 +48,7 @@ public class Game implements IGameLogic {
 	private DirectionalLight directionalLight;
 	private float lightAngle;
 //	private float spotAngle = 0;
-//    private float spotInc = 1;
+//  private float spotInc = 1;
 	private Hud hud;
 
 	private final Renderer renderer;
@@ -67,7 +67,7 @@ public class Game implements IGameLogic {
 		entityList.add(terrain.getChunks()[0]);
 		random = new Random();
 		TreeGenerator treeGen = new TreeGenerator(
-				"X0.4>F+[[X]-X]-F[-FX]+X,X0.4>F-[[X]+X]+F[+FX]-X,X0.4>F*[[X]/X]/F[/FX]*X,X0.4>F/[[X]*X]*F[*FX]/X,F0.6>FF",
+				"X0.4>F+[[X]-X]-F[-FX]+X,X0.4>F*[[X]/X]/F[/FX]*X,X0.4>F/[[X]*X]*F[*FX]/X,X0.4>F-[[X]+X]+F[+FX]-X,F0.6>FF",
 				System.currentTimeMillis());
 		Entity[] tree;
 		for (int loop = 0; loop < 10; loop++) {
@@ -78,7 +78,7 @@ public class Game implements IGameLogic {
 			}
 		}
 		VoronoiGenerator voronoi = new VoronoiGenerator(0, System.currentTimeMillis());
-		Entity v = new Entity(voronoi.generateVoronoi(90, -128f, 128f, -128f, 128f, 0, 256f));
+		Entity v = new Entity(voronoi.generateVoronoi(9, -128f, 128f, -128f, 128f, 0, 256f));
 		entityList.add(v);
 //		CylinderGenerator cylinder = new CylinderGenerator();
 //		Mesh cy = cylinder.makeCylinder(4, 4, 8, 6);
@@ -179,7 +179,7 @@ public class Game implements IGameLogic {
 //        double spotAngleRad = Math.toRadians(spotAngle);
 //        Vector3f coneDir = spotLightList[0].getConeDirection();
 //        coneDir.y = (float) Math.sin(spotAngleRad);
-		lightAngle += 0.0005f;
+		lightAngle += 0.0001f;
 		if(lightAngle > 90) {
 			directionalLight.setIntensity(0);
 			if(lightAngle >= 360){
@@ -211,6 +211,7 @@ public class Game implements IGameLogic {
 			glViewport(0, 0, window.getWidth(), window.getHeight());
 			window.setResized(false);
 		}
+		hud.updateSize(window);
 		renderer.clear();
 		renderer.render(window, entities, camera, ambientLight, pointLightList, spotLightList, directionalLight, hud);
 	}

@@ -55,7 +55,7 @@ public class VoronoiGenerator {
 		textCoords = new float[indices.length];
 		normals = new float[indices.length];
 		VMesh mesh = new VMesh(positions, textCoords, normals, indices);
-		mesh.setMaterial(new Material(new Vector4f(1.0f, 0.0f, 0.0f, 1f), 0.5f));
+		mesh.setMaterial(new Material(new Vector4f(1.0f, 0.0f, 0.0f, 1f), 1f));
 		return mesh;
 	}
 	

@@ -24,7 +24,6 @@ public class TextItem extends Entity {
 		this.numRows = numRows;
 		Texture texture = new Texture(fontFileName);
 		this.setMesh(buildMesh(texture, numCols, numRows));
-		this.getMesh().setMaterial(new Material(texture));
 	}
 
 	private Mesh buildMesh(Texture texture, int numCols, int numRows) {
@@ -79,7 +78,9 @@ public class TextItem extends Entity {
 			indices.add(i * VERTICES_PER_QUAD);
 			indices.add(i * VERTICES_PER_QUAD + 2);
 		}
-		return new Mesh(listToArrayF(positions), listToArrayF(textCoords), normals, listToArrayI(indices));
+		Mesh mesh = new Mesh(listToArrayF(positions), listToArrayF(textCoords), normals, listToArrayI(indices));
+		mesh.setMaterial(new Material(texture));
+		return mesh;
 	}
 	
 	private float[] listToArrayF(List<Float> a) {
