@@ -46,27 +46,60 @@ public class Game implements IGameLogic {
 	private SpotLight[] spotLightList;
 	private DirectionalLight directionalLight;
 	private float lightAngle;
-//	private float spotAngle = 0;
-//  private float spotInc = 1;
+	// private float spotAngle = 0;
+	// private float spotInc = 1;
 	private Hud hud;
 
 	private final Renderer renderer;
-	
-	//terrain variables
-	private int blocksPerRow = 1, width = 256, height = 256, textInc = 1, octaves = 4, poctave1 = 4, poctave2 = 5, voronoiSize = 4096;
+
+	// terrain variables
+	private int blocksPerRow = 1, width = 256, height = 256, textInc = 1, octaves = 4, poctave1 = 4, poctave2 = 5,
+			voronoiSize = 4096;
 	private float scale = 1f, amplitude = 6f, roughness = 1f;
 	private long terrainSeed = 0;
 	private boolean perlinOrValue = true;
-	
-	//tree variables
+
+	// tree variables
 	private String rules = "X0.4>F+[[X]-X]-F[-FX]+X,X0.4>F*[[X]/X]/F[/FX]*X,X0.4>F/[[X]*X]*F[*FX]/X,X0.4>F-[[X]+X]+F[+FX]-X,F0.6>FF";
 	private long treeSeed = 0;
 	private int iterations = 4;
-	private float angleIncrementZ = 30f, angleRandZ = 30f, angleIncrementY = 30f, angleRandY = 30f, baseRadius = 0.4f, radiusDecrease = 0.95f, baseHeight = 0.8f, heightDecrease = 0.95f, startY = -3;
+	private float angleIncrementZ = 30f, angleRandZ = 30f, angleIncrementY = 30f, angleRandY = 30f, baseRadius = 0.4f,
+			radiusDecrease = 0.95f, baseHeight = 0.8f, heightDecrease = 0.95f, startY = -3;
 
-	
-	
 	public Game() {
+		renderer = new Renderer();
+		camera = new Camera();
+		entityList = new ArrayList<Entity>();
+		lightAngle = -90;
+	}
+
+	public Game(int width, int height, int octaves, int poctave1, int poctave2, int voronoiSize, float scale,
+			float amplitude, float roughness, long terrainSeed, boolean perlinOrValue, String rules, long treeSeed,
+			int iterations, float angleIncrementZ, float angleRandZ, float angleIncrementY, float angleRandY,
+			float baseRadius, float radiusDecrease, float baseHeight, float heightDecrease, float startY) {
+		setWidth(width);
+		setHeight(height);
+		setOctaves(octaves);
+		setPoctave1(poctave1);
+		setPoctave2(poctave2);
+		setVoronoiSize(voronoiSize);
+		setScale(scale);
+		setAmplitude(amplitude);
+		setRoughness(roughness);
+		setTerrainSeed(terrainSeed);
+		setPerlinOrValue(perlinOrValue);
+		setRules(rules);
+		setTreeSeed(treeSeed);
+		setIterations(iterations);
+		setAngleIncrementZ(angleIncrementZ);
+		setAngleRandZ(angleRandZ);
+		setAngleIncrementY(angleIncrementY);
+		setAngleRandY(angleRandY);
+		setBaseRadius(baseRadius);
+		setRadiusDecrease(radiusDecrease);
+		setBaseHeight(baseHeight);
+		setHeightDecrease(heightDecrease);
+		setStartY(startY);
 		renderer = new Renderer();
 		camera = new Camera();
 		entityList = new ArrayList<Entity>();
@@ -76,54 +109,58 @@ public class Game implements IGameLogic {
 	@Override
 	public void init(Window window) throws Exception {
 		renderer.init(window);
-		Terrain terrain = new Terrain(blocksPerRow, scale, width, height, textInc, terrainSeed, amplitude, roughness, octaves, poctave1, poctave2, perlinOrValue, voronoiSize);
+		Terrain terrain = new Terrain(blocksPerRow, scale, width, height, textInc, terrainSeed, amplitude, roughness,
+				octaves, poctave1, poctave2, perlinOrValue, voronoiSize);
 		entityList.add(terrain.getChunks()[0]);
 		random = new Random();
 		TreeGenerator treeGen = new TreeGenerator(rules, treeSeed);
 		Entity[] tree;
 		for (int loop = 0; loop < 3; loop++) {
-			tree = treeGen.makeTree(iterations, angleIncrementZ, angleRandZ, angleIncrementY, angleRandY, baseRadius, radiusDecrease,
-					baseHeight, heightDecrease, random.nextFloat() * width - (width/2), startY, random.nextFloat() * height - (height/2));
+			tree = treeGen.makeTree(iterations, angleIncrementZ, angleRandZ, angleIncrementY, angleRandY, baseRadius,
+					radiusDecrease, baseHeight, heightDecrease, random.nextFloat() * width - (width / 2), startY,
+					random.nextFloat() * height - (height / 2));
 			for (int i = 0; i < tree.length; i++) {
 				entityList.add(tree[i]);
 			}
 		}
-//		VoronoiGenerator voronoi = new VoronoiGenerator(0, System.currentTimeMillis());
-//		Entity v = new Entity(voronoi.generateVoronoi(9, -128f, 128f, -128f, 128f, -1, 256f));
-//		entityList.add(v);
-//		CylinderGenerator cylinder = new CylinderGenerator();
-//		Mesh cy = cylinder.makeCylinder(4, 4, 8, 6);
-//		cy.setMaterial(new Material(new Vector4f(0.5f, 0f, 0.5f, 1f), 0.5f));
-//		Entity c = new Entity(cy);
-//		c.setPosition(1, 2, 2);
-//		entityList.add(c);
+		// VoronoiGenerator voronoi = new VoronoiGenerator(0,
+		// System.currentTimeMillis());
+		// Entity v = new Entity(voronoi.generateVoronoi(9, -128f, 128f, -128f,
+		// 128f, -1, 256f));
+		// entityList.add(v);
+		// CylinderGenerator cylinder = new CylinderGenerator();
+		// Mesh cy = cylinder.makeCylinder(4, 4, 8, 6);
+		// cy.setMaterial(new Material(new Vector4f(0.5f, 0f, 0.5f, 1f), 0.5f));
+		// Entity c = new Entity(cy);
+		// c.setPosition(1, 2, 2);
+		// entityList.add(c);
 		ambientLight = new Vector3f(0.3f, 0.3f, 0.3f);
 		Vector3f lightColour = new Vector3f(1, 1, 1);
-        Vector3f lightPosition = new Vector3f(0, 5, 0);
-        float lightIntensity = 1.0f;
-        PointLight pointLight = new PointLight(lightColour, lightPosition, lightIntensity);
-        PointLight.Attenuation att = new PointLight.Attenuation(0f, 0f, 0.1f);
-        pointLight.setAttenuation(att);
-        pointLightList = new PointLight[]{pointLight};
-        lightPosition = new Vector3f(0, 0.0f, 10f);
-        pointLight = new PointLight(lightColour, lightPosition, 10f);
-        att = new PointLight.Attenuation(0.0f, 0.0f, 0.01f);
-        pointLight.setAttenuation(att);
-        Vector3f coneDir = new Vector3f(0, 0, -1);
-        float cutoff = (float) Math.cos(Math.toRadians(140));
-        SpotLight spotLight = new SpotLight(pointLight, coneDir, cutoff);
-        spotLightList = new SpotLight[]{spotLight};
-        lightPosition = new Vector3f(-1, 0, 0);
-        directionalLight = new DirectionalLight(lightColour, lightPosition, lightIntensity);
+		Vector3f lightPosition = new Vector3f(0, 5, 0);
+		float lightIntensity = 1.0f;
+		PointLight pointLight = new PointLight(lightColour, lightPosition, lightIntensity);
+		PointLight.Attenuation att = new PointLight.Attenuation(0f, 0f, 0.1f);
+		pointLight.setAttenuation(att);
+		pointLightList = new PointLight[] { pointLight };
+		lightPosition = new Vector3f(0, 0.0f, 10f);
+		pointLight = new PointLight(lightColour, lightPosition, 10f);
+		att = new PointLight.Attenuation(0.0f, 0.0f, 0.01f);
+		pointLight.setAttenuation(att);
+		Vector3f coneDir = new Vector3f(0, 0, -1);
+		float cutoff = (float) Math.cos(Math.toRadians(140));
+		SpotLight spotLight = new SpotLight(pointLight, coneDir, cutoff);
+		spotLightList = new SpotLight[] { spotLight };
+		lightPosition = new Vector3f(-1, 0, 0);
+		directionalLight = new DirectionalLight(lightColour, lightPosition, lightIntensity);
 		entities = new Entity[entityList.size()];
 		for (Entity e : entityList) {
 			entities[entityList.indexOf(e)] = e;
 		}
 		hud = new Hud("FONT");
-//		NameGenerator names = new NameGenerator(System.currentTimeMillis());
-//		for(int i = 0; i < 100; i++){
-//			System.out.println(names.getName(random.nextInt(3) + 2));
-//		}
+		// NameGenerator names = new NameGenerator(System.currentTimeMillis());
+		// for(int i = 0; i < 100; i++){
+		// System.out.println(names.getName(random.nextInt(3) + 2));
+		// }
 	}
 
 	public static BufferedImage getBufferedImage(String path) {
@@ -181,23 +218,23 @@ public class Game implements IGameLogic {
 		// rotation = 0;
 		// }
 		// test.setRotation(rotation, rotation, rotation);
-//		spotAngle += spotInc * 0.005f;
-//        if (spotAngle > 2) {
-//            spotInc = -1;
-//        } else if (spotAngle < -2) {
-//            spotInc = 1;
-//        }
-//        double spotAngleRad = Math.toRadians(spotAngle);
-//        Vector3f coneDir = spotLightList[0].getConeDirection();
-//        coneDir.y = (float) Math.sin(spotAngleRad);
+		// spotAngle += spotInc * 0.005f;
+		// if (spotAngle > 2) {
+		// spotInc = -1;
+		// } else if (spotAngle < -2) {
+		// spotInc = 1;
+		// }
+		// double spotAngleRad = Math.toRadians(spotAngle);
+		// Vector3f coneDir = spotLightList[0].getConeDirection();
+		// coneDir.y = (float) Math.sin(spotAngleRad);
 		lightAngle += 0.0001f;
-		if(lightAngle > 90) {
+		if (lightAngle > 90) {
 			directionalLight.setIntensity(0);
-			if(lightAngle >= 360){
+			if (lightAngle >= 360) {
 				lightAngle = -90;
 			}
 		} else if (lightAngle <= -80 || lightAngle >= 80) {
-			float factor = 1 - (float)(Math.abs(lightAngle) - 80) / 10.0f;
+			float factor = 1 - (float) (Math.abs(lightAngle) - 80) / 10.0f;
 			directionalLight.setIntensity(factor);
 			directionalLight.getColor().y = Math.max(factor, 0.8f);
 			directionalLight.getColor().z = Math.max(factor, 0.4f);
@@ -230,7 +267,7 @@ public class Game implements IGameLogic {
 	@Override
 	public void cleanup() {
 		renderer.cleanup();
-		for(Entity e : entities){
+		for (Entity e : entities) {
 			e.getMesh().cleanUp();
 		}
 		hud.cleanup();
