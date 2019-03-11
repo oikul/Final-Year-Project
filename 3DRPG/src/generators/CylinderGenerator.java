@@ -12,7 +12,7 @@ public class CylinderGenerator {
 	private float[] positions, textCoords, normals;
 	int[] indices;
 	private float angle;
-	private List<Float> positionsList;
+	private List<Float> positionsList, textCoordsList;
 	private List<Integer> indicesList;
 	private Mesh mesh;
 
@@ -24,6 +24,7 @@ public class CylinderGenerator {
 		v0.z = 0;
 		angle = 0;
 		positionsList = new ArrayList<Float>();
+		textCoordsList = new ArrayList<Float>();
 		indicesList = new ArrayList<Integer>();
 		positionsList.add(v0.x);
 		positionsList.add(v0.y);
@@ -113,7 +114,7 @@ public class CylinderGenerator {
 		for (int i = 0; i < indicesList.size(); i++) {
 			indices[i] = indicesList.get(i);
 		}
-		textCoords = new float[indices.length];
+		textCoords = listToArray(textCoordsList);
 		normals = calculateNormals(positions, indices);
 		mesh = new Mesh(positions, textCoords, normals, indices);
 		return mesh;

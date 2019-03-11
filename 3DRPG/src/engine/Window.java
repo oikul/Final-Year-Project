@@ -23,6 +23,10 @@ import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.opengl.GL11.glCullFace;
 import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -34,8 +38,9 @@ public class Window {
 	private boolean resized;
 
 	public Window() {
+		glfwTerminate();
 		if (!glfwInit()) {
-			throw new IllegalStateException("Failed to initialise GLFW");
+			throw new IllegalStateException();
 		}
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
@@ -67,8 +72,8 @@ public class Window {
 			glfwSwapInterval(1);
 		}
 		// Support for transparencies
-//		glEnable(GL_BLEND);
-//		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL11.GL_DEPTH_TEST);
 		glEnable(GL11.GL_CULL_FACE);
 		glCullFace(GL11.GL_FRONT);

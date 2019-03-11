@@ -215,6 +215,7 @@ public class Shader {
 		createUniform(uniformName + ".diffuse");
 		createUniform(uniformName + ".specular");
 		createUniform(uniformName + ".hasTexture");
+		createUniform(uniformName + ".hasSecondary");
 		createUniform(uniformName + ".reflectance");
 	}
 	
@@ -244,6 +245,7 @@ public class Shader {
 		setUniform(uniformName + ".diffuse", material.getDiffuseColour());
 		setUniform(uniformName + ".specular", material.getSpecularColour());
 		setUniform(uniformName + ".hasTexture", material.isTextured() ? 1 : 0);
+		setUniform(uniformName + ".hasSecondary", material.isSecondaryTextured() ? 1 : 0);
 		setUniform(uniformName + ".reflectance", material.getReflectance());
 	}
 	

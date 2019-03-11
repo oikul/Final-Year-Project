@@ -39,10 +39,12 @@ struct Material{
 	vec4 diffuse;
 	vec4 specular;
 	int hasTexture;
+	int hasSecondary;
 	float reflectance;
 };
 
 uniform sampler2D texture_sampler;
+uniform sampler2D secondary_sampler;
 uniform vec3 ambientLight;
 uniform float specularPower;
 uniform Material material;
@@ -56,7 +58,11 @@ vec4 speculrC;
 
 void setupColour(Material material, vec2 textCoord){
 	if (material.hasTexture == 1) {
-		ambientC = texture(texture_sampler, textCoord);
+		vec2 nTexCoord = vec2(textCoord.x * 32, textCoord.y * 32);
+		ambientC = texture(texture_sampler, nTexCoord);
+		if(material.hasSecondary == 1) {
+			ambientC += texture(secondary_sampler, textCoord);
+		}
 		diffuseC = ambientC;
 		speculrC = ambientC;
 	} else {
@@ -102,7 +108,7 @@ vec4 calcSpotLight(SpotLight light, vec3 position, vec3 normal) {
         colour = calcPointLight(light.pl, position, normal);
         colour *= (1.0 - (1.0 - spot_alfa)/(1.0 - light.cutoff));
     }
-    return colour;    
+    return colour;
 }
 
 vec4 calcDirectionalLight(DirectionalLight light, vec3 position, vec3 normal){

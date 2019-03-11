@@ -7,9 +7,9 @@ import mesh.Entity;
 
 public class Hud implements IHud {
 
-    private static final int FONT_COLS = 15;
+    private static final int FONT_COLS = 16;
 
-    private static final int FONT_ROWS = 17;
+    private static final int FONT_ROWS = 16;
 
     private static final String FONT_TEXTURE = "font";
 
@@ -20,7 +20,6 @@ public class Hud implements IHud {
     public Hud(String statusText) throws Exception {
         this.statusTextItem = new TextItem(statusText, FONT_TEXTURE, FONT_COLS, FONT_ROWS);
         this.statusTextItem.getMesh().getMaterial().setAmbientColour(new Vector4f(1, 1, 1, 1));
-        //this.statusTextItem.setPosition(0.5f, 0.5f, 0.5f);
         entities = new Entity[]{statusTextItem};
     }
 

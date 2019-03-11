@@ -41,6 +41,7 @@ public class Renderer {
 		shader.createUniform("projectionMatrix");
 		shader.createUniform("modelViewMatrix");
 		shader.createUniform("texture_sampler");
+		shader.createUniform("secondary_sampler");
 		shader.createUniform("ambientLight");
 		shader.createUniform("specularPower");
 		shader.createMaterialUniform("material");
@@ -63,6 +64,7 @@ public class Renderer {
 		projection = transformation.getProjectionMatrix(FOV, window.getWidth(), window.getHeight(), Z_NEAR, Z_FAR);
 		shader.setUniform("projectionMatrix", projection);
 		shader.setUniform("texture_sampler", 0);
+		shader.setUniform("secondary_sampler", 1);
 		view = transformation.getViewMatrix(camera);
 //		shader.setUniform("ambientLight", ambientLight);
 //		shader.setUniform("specularPower", specularPower);

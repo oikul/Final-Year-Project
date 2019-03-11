@@ -4,18 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
-import game.Game;
 import generators.PerlinNoiseGenerator;
 import generators.ValueNoiseGenerator;
+import generators.VoronoiGenerator;
 
 public class HeightMapMesh {
 
 	private static final float startX = -0.5f, startZ = -0.5f;
 	private Mesh mesh;
+	private float[] positions, textCoords, normals;
+	private int[] indices;
 
-	public HeightMapMesh(int width, int height, int textInc, long seed, float amplitude, float roughness, int voctaves, int poctave1, int poctave2, boolean perlinorvalue) {
+	public HeightMapMesh(int width, int height, int textInc, long seed, float amplitude, float roughness, int voctaves, int poctave1, int poctave2, boolean perlinorvalue, int voronoiSize) {
 		PerlinNoiseGenerator pGenerator = null;
 		ValueNoiseGenerator vGenerator = null;
 		if(perlinorvalue){
@@ -25,46 +26,52 @@ public class HeightMapMesh {
 		}
 		float incx = Math.abs(startX * 2) / (width - 1);
 		float incz = Math.abs(startZ * 2) / (height - 1);
-		List<Float> positions = new ArrayList<Float>();
-		List<Float> textCoords = new ArrayList<Float>();
-		List<Integer> indices = new ArrayList<Integer>();
+		List<Float> positionsList = new ArrayList<Float>();
+		List<Float> textCoordsList = new ArrayList<Float>();
+		List<Integer> indicesList = new ArrayList<Integer>();
 		float[][] noise = new float[0][0];
 		if(perlinorvalue){
 			noise = pGenerator.getPerlinNoise(width, height, poctave1, poctave2);
 		}
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
-				positions.add(startX + col + incx);
+				positionsList.add(startX + col + incx);
 				if(perlinorvalue){
-					positions.add(noise[col][row] * amplitude);	
+					positionsList.add(noise[col][row] * amplitude);	
 				}else{
-					positions.add(vGenerator.generateHeight(col, row) - (amplitude * voctaves / 2));
+					positionsList.add(vGenerator.generateHeight(col, row) - (amplitude * voctaves / 2));
 				}
-				positions.add(startZ + row + incz);
+				positionsList.add(startZ + row + incz);
 
-				textCoords.add((float) textInc * (float) col / (float) width);
-				textCoords.add((float) textInc * (float) row / (float) height);
+				textCoordsList.add((float) textInc * (float) col / (float) width);
+				textCoordsList.add((float) textInc * (float) row / (float) height);
 
 				if (col < width - 1 && row < height - 1) {
 					int leftTop = row * width + col;
 					int leftBottom = (row + 1) * width + col;
 					int rightBottom = (row + 1) * width + col + 1;
 					int rightTop = row * width + col + 1;
-					indices.add(rightTop);
-					indices.add(leftBottom);
-					indices.add(leftTop);
-					indices.add(rightBottom);
-					indices.add(leftBottom);
-					indices.add(rightTop);
+					indicesList.add(rightTop);
+					indicesList.add(leftBottom);
+					indicesList.add(leftTop);
+					indicesList.add(rightBottom);
+					indicesList.add(leftBottom);
+					indicesList.add(rightTop);
 				}
 			}
 		}
-		float[] posArray = listToArray(positions);
-		float[] textArray = listToArray(textCoords);
-		int[] indicesArray = indices.stream().mapToInt(i -> i).toArray();
-		float[] normals = calcNormals(posArray, width, height);
-		this.mesh = new Mesh(posArray, textArray, normals, indicesArray);
-		this.mesh.setMaterial(new Material(new Texture("grass"), 0f));
+		positions = listToArray(positionsList);
+		textCoords = listToArray(textCoordsList);
+		indices = indicesList.stream().mapToInt(i -> i).toArray();
+		normals = calcNormals(positions, width, height);
+		this.mesh = new Mesh(positions, textCoords, normals, indices);
+		Material m = new Material(new Texture("grass"), 0f);
+		VoronoiGenerator voronoi = new VoronoiGenerator(0, seed);
+		Texture t = new Texture();
+		t.setImage(voronoi.createVoronoiImage(9, 0f, voronoiSize, 0f, voronoiSize, voronoiSize));
+		t.loadTexture();
+		m.setSecondaryTexture(t);
+		this.mesh.setMaterial(m);
 	}
 
 	public Mesh getMesh() {
@@ -149,6 +156,38 @@ public class HeightMapMesh {
 			}
 		}
 		return listToArray(normals);
+	}
+
+	public float[] getPositions() {
+		return positions;
+	}
+
+	public void setPositions(float[] positions) {
+		this.positions = positions;
+	}
+
+	public float[] getTextCoords() {
+		return textCoords;
+	}
+
+	public void setTextCoords(float[] textCoords) {
+		this.textCoords = textCoords;
+	}
+
+	public float[] getNormals() {
+		return normals;
+	}
+
+	public void setNormals(float[] normals) {
+		this.normals = normals;
+	}
+
+	public int[] getIndices() {
+		return indices;
+	}
+
+	public void setIndices(int[] indices) {
+		this.indices = indices;
 	}
 
 }

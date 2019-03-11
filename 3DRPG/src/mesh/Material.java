@@ -14,13 +14,14 @@ public class Material {
 
     private float reflectance;
 
-    private Texture texture;
+    private Texture texture, secondaryTexture;
 
     public Material() {
         this.ambientColour = DEFAULT_COLOUR;
         this.diffuseColour = DEFAULT_COLOUR;
         this.specularColour = DEFAULT_COLOUR;
         this.texture = null;
+        this.setSecondaryTexture(null);
         this.reflectance = 0;
     }
 
@@ -41,6 +42,16 @@ public class Material {
         this.diffuseColour = diffuseColour;
         this.specularColour = specularColour;
         this.texture = texture;
+        this.setSecondaryTexture(null);
+        this.reflectance = reflectance;
+    }
+    
+    public Material(Vector4f ambientColour, Vector4f diffuseColour, Vector4f specularColour, Texture texture, Texture secondary, float reflectance) {
+        this.ambientColour = ambientColour;
+        this.diffuseColour = diffuseColour;
+        this.specularColour = specularColour;
+        this.texture = texture;
+        this.setSecondaryTexture(secondary);
         this.reflectance = reflectance;
     }
 
@@ -79,6 +90,10 @@ public class Material {
     public boolean isTextured() {
         return this.texture != null;
     }
+    
+    public boolean isSecondaryTextured() {
+        return this.secondaryTexture != null;
+    }
 
     public Texture getTexture() {
         return texture;
@@ -87,5 +102,13 @@ public class Material {
     public void setTexture(Texture texture) {
         this.texture = texture;
     }
+
+	public Texture getSecondaryTexture() {
+		return secondaryTexture;
+	}
+
+	public void setSecondaryTexture(Texture secondaryTexture) {
+		this.secondaryTexture = secondaryTexture;
+	}
 
 }

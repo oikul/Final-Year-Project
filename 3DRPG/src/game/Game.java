@@ -25,7 +25,6 @@ import engine.MouseInput;
 import engine.Renderer;
 import engine.Window;
 import generators.TreeGenerator;
-import generators.VoronoiGenerator;
 import hud.Hud;
 import lighting.DirectionalLight;
 import lighting.PointLight;
@@ -52,7 +51,21 @@ public class Game implements IGameLogic {
 	private Hud hud;
 
 	private final Renderer renderer;
+	
+	//terrain variables
+	private int blocksPerRow = 1, width = 256, height = 256, textInc = 1, octaves = 4, poctave1 = 4, poctave2 = 5, voronoiSize = 4096;
+	private float scale = 1f, amplitude = 6f, roughness = 1f;
+	private long terrainSeed = 0;
+	private boolean perlinOrValue = true;
+	
+	//tree variables
+	private String rules = "X0.4>F+[[X]-X]-F[-FX]+X,X0.4>F*[[X]/X]/F[/FX]*X,X0.4>F/[[X]*X]*F[*FX]/X,X0.4>F-[[X]+X]+F[+FX]-X,F0.6>FF";
+	private long treeSeed = 0;
+	private int iterations = 4;
+	private float angleIncrementZ = 30f, angleRandZ = 30f, angleIncrementY = 30f, angleRandY = 30f, baseRadius = 0.4f, radiusDecrease = 0.95f, baseHeight = 0.8f, heightDecrease = 0.95f, startY = -3;
 
+	
+	
 	public Game() {
 		renderer = new Renderer();
 		camera = new Camera();
@@ -63,23 +76,21 @@ public class Game implements IGameLogic {
 	@Override
 	public void init(Window window) throws Exception {
 		renderer.init(window);
-		Terrain terrain = new Terrain(1, 1f, 256, 256, 1, 0, 6, 1f, 4, 4, 5, true);
+		Terrain terrain = new Terrain(blocksPerRow, scale, width, height, textInc, terrainSeed, amplitude, roughness, octaves, poctave1, poctave2, perlinOrValue, voronoiSize);
 		entityList.add(terrain.getChunks()[0]);
 		random = new Random();
-		TreeGenerator treeGen = new TreeGenerator(
-				"X0.4>F+[[X]-X]-F[-FX]+X,X0.4>F*[[X]/X]/F[/FX]*X,X0.4>F/[[X]*X]*F[*FX]/X,X0.4>F-[[X]+X]+F[+FX]-X,F0.6>FF",
-				System.currentTimeMillis());
+		TreeGenerator treeGen = new TreeGenerator(rules, treeSeed);
 		Entity[] tree;
-		for (int loop = 0; loop < 10; loop++) {
-			tree = treeGen.makeTree(4, 30f + random.nextFloat() * 30f, 30f + random.nextFloat() * 30f, 0.4f, 0.95f,
-					0.8f, 0.95f, random.nextFloat() * 256f - 128f, -4, random.nextFloat() * 256f - 128f);
+		for (int loop = 0; loop < 3; loop++) {
+			tree = treeGen.makeTree(iterations, angleIncrementZ, angleRandZ, angleIncrementY, angleRandY, baseRadius, radiusDecrease,
+					baseHeight, heightDecrease, random.nextFloat() * width - (width/2), startY, random.nextFloat() * height - (height/2));
 			for (int i = 0; i < tree.length; i++) {
 				entityList.add(tree[i]);
 			}
 		}
-		VoronoiGenerator voronoi = new VoronoiGenerator(0, System.currentTimeMillis());
-		Entity v = new Entity(voronoi.generateVoronoi(9, -128f, 128f, -128f, 128f, 0, 256f));
-		entityList.add(v);
+//		VoronoiGenerator voronoi = new VoronoiGenerator(0, System.currentTimeMillis());
+//		Entity v = new Entity(voronoi.generateVoronoi(9, -128f, 128f, -128f, 128f, -1, 256f));
+//		entityList.add(v);
 //		CylinderGenerator cylinder = new CylinderGenerator();
 //		Mesh cy = cylinder.makeCylinder(4, 4, 8, 6);
 //		cy.setMaterial(new Material(new Vector4f(0.5f, 0f, 0.5f, 1f), 0.5f));
@@ -108,7 +119,7 @@ public class Game implements IGameLogic {
 		for (Entity e : entityList) {
 			entities[entityList.indexOf(e)] = e;
 		}
-		hud = new Hud("font");
+		hud = new Hud("FONT");
 //		NameGenerator names = new NameGenerator(System.currentTimeMillis());
 //		for(int i = 0; i < 100; i++){
 //			System.out.println(names.getName(random.nextInt(3) + 2));
@@ -211,13 +222,217 @@ public class Game implements IGameLogic {
 			glViewport(0, 0, window.getWidth(), window.getHeight());
 			window.setResized(false);
 		}
-		hud.updateSize(window);
 		renderer.clear();
+		hud.updateSize(window);
 		renderer.render(window, entities, camera, ambientLight, pointLightList, spotLightList, directionalLight, hud);
 	}
 
 	@Override
 	public void cleanup() {
 		renderer.cleanup();
+		for(Entity e : entities){
+			e.getMesh().cleanUp();
+		}
+		hud.cleanup();
+	}
+
+	public int getBlocksPerRow() {
+		return blocksPerRow;
+	}
+
+	public void setBlocksPerRow(int blocksPerRow) {
+		this.blocksPerRow = blocksPerRow;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public int getTextInc() {
+		return textInc;
+	}
+
+	public void setTextInc(int textInc) {
+		this.textInc = textInc;
+	}
+
+	public int getOctaves() {
+		return octaves;
+	}
+
+	public void setOctaves(int octaves) {
+		this.octaves = octaves;
+	}
+
+	public int getPoctave1() {
+		return poctave1;
+	}
+
+	public void setPoctave1(int poctave1) {
+		this.poctave1 = poctave1;
+	}
+
+	public int getPoctave2() {
+		return poctave2;
+	}
+
+	public void setPoctave2(int poctave2) {
+		this.poctave2 = poctave2;
+	}
+
+	public int getVoronoiSize() {
+		return voronoiSize;
+	}
+
+	public void setVoronoiSize(int voronoiSize) {
+		this.voronoiSize = voronoiSize;
+	}
+
+	public float getScale() {
+		return scale;
+	}
+
+	public void setScale(float scale) {
+		this.scale = scale;
+	}
+
+	public float getAmplitude() {
+		return amplitude;
+	}
+
+	public void setAmplitude(float amplitude) {
+		this.amplitude = amplitude;
+	}
+
+	public float getRoughness() {
+		return roughness;
+	}
+
+	public void setRoughness(float roughness) {
+		this.roughness = roughness;
+	}
+
+	public long getTerrainSeed() {
+		return terrainSeed;
+	}
+
+	public void setTerrainSeed(long terrainSeed) {
+		this.terrainSeed = terrainSeed;
+	}
+
+	public boolean isPerlinOrValue() {
+		return perlinOrValue;
+	}
+
+	public void setPerlinOrValue(boolean perlinOrValue) {
+		this.perlinOrValue = perlinOrValue;
+	}
+
+	public String getRules() {
+		return rules;
+	}
+
+	public void setRules(String rules) {
+		this.rules = rules;
+	}
+
+	public long getTreeSeed() {
+		return treeSeed;
+	}
+
+	public void setTreeSeed(long treeSeed) {
+		this.treeSeed = treeSeed;
+	}
+
+	public int getIterations() {
+		return iterations;
+	}
+
+	public void setIterations(int iterations) {
+		this.iterations = iterations;
+	}
+
+	public float getAngleIncrementZ() {
+		return angleIncrementZ;
+	}
+
+	public void setAngleIncrementZ(float angleIncrementZ) {
+		this.angleIncrementZ = angleIncrementZ;
+	}
+
+	public float getAngleRandZ() {
+		return angleRandZ;
+	}
+
+	public void setAngleRandZ(float angleRandZ) {
+		this.angleRandZ = angleRandZ;
+	}
+
+	public float getAngleIncrementY() {
+		return angleIncrementY;
+	}
+
+	public void setAngleIncrementY(float angleIncrementY) {
+		this.angleIncrementY = angleIncrementY;
+	}
+
+	public float getAngleRandY() {
+		return angleRandY;
+	}
+
+	public void setAngleRandY(float angleRandY) {
+		this.angleRandY = angleRandY;
+	}
+
+	public float getBaseRadius() {
+		return baseRadius;
+	}
+
+	public void setBaseRadius(float baseRadius) {
+		this.baseRadius = baseRadius;
+	}
+
+	public float getRadiusDecrease() {
+		return radiusDecrease;
+	}
+
+	public void setRadiusDecrease(float radiusDecrease) {
+		this.radiusDecrease = radiusDecrease;
+	}
+
+	public float getBaseHeight() {
+		return baseHeight;
+	}
+
+	public void setBaseHeight(float baseHeight) {
+		this.baseHeight = baseHeight;
+	}
+
+	public float getHeightDecrease() {
+		return heightDecrease;
+	}
+
+	public void setHeightDecrease(float heightDecrease) {
+		this.heightDecrease = heightDecrease;
+	}
+
+	public float getStartY() {
+		return startY;
+	}
+
+	public void setStartY(float startY) {
+		this.startY = startY;
 	}
 }

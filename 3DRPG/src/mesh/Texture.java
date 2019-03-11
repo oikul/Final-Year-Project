@@ -74,4 +74,12 @@ public class Texture {
 	public int getHeight(){
 		return image.getHeight();
 	}
+
+	public BufferedImage getImage() {
+		return image;
+	}
+
+	public void setImage(BufferedImage image) {
+		this.image = image;
+	}
 }

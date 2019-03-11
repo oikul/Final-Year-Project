@@ -73,8 +73,14 @@ public class GameEngine implements Runnable {
 		window.destroy();
 	}
 	
-	private void cleanup(){
+	public void cleanup(){
 		gameLogic.cleanup();
+		window.destroy();
+		try {
+			gameLoopThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void handleInput() {

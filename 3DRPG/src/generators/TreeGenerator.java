@@ -2,6 +2,7 @@ package generators;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Stack;
 
 import org.joml.Vector3f;
@@ -16,12 +17,14 @@ public class TreeGenerator {
 	private Entity[] tree;
 	private CylinderGenerator cylinder;
 	private LSystemGenerator lSystemGen;
+	private Random random;
 
 	public TreeGenerator(String rules, long seed) {
+		random = new Random(seed);
 		lSystemGen = new LSystemGenerator(rules, seed);
 	}
 	
-	public Entity[] makeTree(int iterations, float angleIncrementZ, float angleIncrementY, float baseRadius, float radiusDecrease, float baseHeight,
+	public Entity[] makeTree(int iterations, float angleIncrementZ, float angleRandZ, float angleIncrementY, float angleRandY, float baseRadius, float radiusDecrease, float baseHeight,
 			float heightDecrease, float startX, float startY, float startZ){
 		String treeString = lSystemGen.repeat(iterations, "X");
 		cylinder = new CylinderGenerator();
@@ -33,6 +36,7 @@ public class TreeGenerator {
 			case 'F':
 				Mesh m = cylinder.makeCylinder(baseRadius, baseRadius * radiusDecrease, baseHeight, 6);
 				m.setMaterial(new Material(new Vector4f(160.0f / 255.0f, 82.0f / 255.0f, 45.0f / 255.0f, 1f), 0.9f));
+//				m.setMaterial(new Material(new Texture("bark"), 0.9f));
 				treeParts.add(new Entity(m));
 				treeParts.get(treeParts.size() - 1).setRotation(rotation);
 				treeParts.get(treeParts.size() - 1).setPosition(position);
@@ -41,16 +45,16 @@ public class TreeGenerator {
 				baseHeight *= heightDecrease;
 				break;
 			case '+':
-				rotation = new Vector3f(rotation.x, rotation.y, rotation.z + angleIncrementZ);
+				rotation = new Vector3f(rotation.x, rotation.y, rotation.z + (angleIncrementZ + random.nextFloat() * angleRandZ));
 				break;
 			case '-':
-				rotation = new Vector3f(rotation.x, rotation.y, rotation.z - angleIncrementZ);
+				rotation = new Vector3f(rotation.x, rotation.y, rotation.z - (angleIncrementZ + random.nextFloat() * angleRandZ));
 				break;
 			case '*':
-				rotation = new Vector3f(rotation.x, rotation.y + angleIncrementY, rotation.z);
+				rotation = new Vector3f(rotation.x, rotation.y + (angleIncrementY + random.nextFloat() * angleRandY), rotation.z);
 				break;
 			case '/':
-				rotation = new Vector3f(rotation.x, rotation.y - angleIncrementY, rotation.z);
+				rotation = new Vector3f(rotation.x, rotation.y - (angleIncrementY + random.nextFloat() * angleRandY), rotation.z);
 				break;
 			case '[':
 				variableSave.push(rotation.x);

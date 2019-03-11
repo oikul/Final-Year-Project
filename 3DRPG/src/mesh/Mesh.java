@@ -1,4 +1,5 @@
 package mesh;
+
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
@@ -6,6 +7,7 @@ import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
@@ -112,11 +114,16 @@ public class Mesh {
 
     public void render() {
     	Texture texture = material.getTexture();
+    	Texture secondary = material.getSecondaryTexture();
         if (texture != null) {
             // Activate firs texture bank
             glActiveTexture(GL_TEXTURE0);
             // Bind the texture
             glBindTexture(GL_TEXTURE_2D, texture.getId());
+        }
+        if(secondary != null){
+        	glActiveTexture(GL_TEXTURE1);
+        	glBindTexture(GL_TEXTURE_2D, secondary.getId());
         }
 
         // Draw the mesh
@@ -148,6 +155,10 @@ public class Mesh {
         Texture texture = material.getTexture();
         if (texture != null) {
             texture.cleanup();
+        }
+        Texture secondary = material.getSecondaryTexture();
+        if (secondary != null) {
+            secondary.cleanup();
         }
 
         // Delete the VAO
