@@ -60,11 +60,13 @@ public class Game implements IGameLogic {
 	private boolean perlinOrValue = true;
 
 	// tree variables
-	private String startString = "X", rules = "X0.4>F+[[X]-X]-F[-FX]+X,X0.4>F*[[X]/X]/F[/FX]*X,X0.4>F/[[X]*X]*F[*FX]/X,X0.4>F-[[X]+X]+F[+FX]-X,F0.6>FF";
+	private String startString = "X",
+			rules = "X0.4>F+[[X]-X]-F[-FX]+X,X0.4>F*[[X]/X]/F[/FX]*X,X0.4>F/[[X]*X]*F[*FX]/X,X0.4>F-[[X]+X]+F[+FX]-X,F0.6>FF";
 	private long treeSeed = 0;
-	private int iterations = 4;
+	private int iterations = 4, treeCount = 100, subdivisions = 6;
 	private float angleIncrementZ = 30f, angleRandZ = 30f, angleIncrementY = 30f, angleRandY = 30f, baseRadius = 0.4f,
 			radiusDecrease = 0.95f, baseHeight = 0.8f, heightDecrease = 0.95f, startY = -3;
+	private boolean useFast = true;
 
 	public Game() {
 		renderer = new Renderer();
@@ -76,7 +78,8 @@ public class Game implements IGameLogic {
 	public Game(int width, int height, int octaves, int poctave1, int poctave2, int voronoiSize, float scale,
 			float amplitude, float roughness, long terrainSeed, boolean perlinOrValue, String rules, long treeSeed,
 			int iterations, float angleIncrementZ, float angleRandZ, float angleIncrementY, float angleRandY,
-			float baseRadius, float radiusDecrease, float baseHeight, float heightDecrease, float startY, int voronoiPoints, String startString) {
+			float baseRadius, float radiusDecrease, float baseHeight, float heightDecrease, float startY,
+			int voronoiPoints, String startString, int treeCount, boolean useFast, int subdivisions) {
 		setWidth(width);
 		setHeight(height);
 		setOctaves(octaves);
@@ -102,6 +105,9 @@ public class Game implements IGameLogic {
 		setStartY(startY);
 		setVoronoiPoints(voronoiPoints);
 		setStartString(startString);
+		setTreeCount(treeCount);
+		setUseFast(useFast);
+		setSubdivisions(subdivisions);
 		renderer = new Renderer();
 		camera = new Camera();
 		entityList = new ArrayList<Entity>();
@@ -116,13 +122,23 @@ public class Game implements IGameLogic {
 		entityList.add(terrain.getChunks()[0]);
 		random = new Random();
 		TreeGenerator treeGen = new TreeGenerator(rules, treeSeed);
-		Entity[] tree;
-		for (int loop = 0; loop < 3; loop++) {
-			tree = treeGen.makeTree(iterations, startString, angleIncrementZ, angleRandZ, angleIncrementY, angleRandY, baseRadius,
-					radiusDecrease, baseHeight, heightDecrease, random.nextFloat() * width - (width / 2), startY,
-					random.nextFloat() * height - (height / 2));
-			for (int i = 0; i < tree.length; i++) {
-				entityList.add(tree[i]);
+		Entity tree;
+		Entity[] trees;
+		if (useFast) {
+			for (int loop = 0; loop < treeCount; loop++) {
+				tree = treeGen.makeTreeFast(iterations, startString, angleIncrementZ, angleRandZ, angleIncrementY,
+						angleRandY, baseRadius, radiusDecrease, baseHeight, heightDecrease, subdivisions,
+						random.nextFloat() * width - (width / 2), startY, random.nextFloat() * height - (height / 2));
+				entityList.add(tree);
+			}
+		}else{
+			for (int loop = 0; loop < treeCount; loop++) {
+				trees = treeGen.makeTree(iterations, startString, angleIncrementZ, angleRandZ, angleIncrementY,
+						angleRandY, baseRadius, radiusDecrease, baseHeight, heightDecrease, subdivisions,
+						random.nextFloat() * width - (width / 2), startY, random.nextFloat() * height - (height / 2));
+				for(Entity t : trees){
+					entityList.add(t);
+				}
 			}
 		}
 		// VoronoiGenerator voronoi = new VoronoiGenerator(0,
@@ -489,5 +505,29 @@ public class Game implements IGameLogic {
 
 	public void setStartString(String startString) {
 		this.startString = startString;
+	}
+
+	public int getTreeCount() {
+		return treeCount;
+	}
+
+	public void setTreeCount(int treeCount) {
+		this.treeCount = treeCount;
+	}
+
+	public boolean isUseFast() {
+		return useFast;
+	}
+
+	public void setUseFast(boolean useFast) {
+		this.useFast = useFast;
+	}
+
+	public int getSubdivisions() {
+		return subdivisions;
+	}
+
+	public void setSubdivisions(int subdivisions) {
+		this.subdivisions = subdivisions;
 	}
 }

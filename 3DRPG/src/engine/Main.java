@@ -20,14 +20,16 @@ public class Main {
 	private static JButton runButton;
 	private static JLabel terrainLabel, widthLabel, heightLabel, scaleLabel, amplitudeLabel, roughnessLabel,
 			octavesLabel, pOctave1Label, pOctave2Label, voronoiLabel, voronoiPointsLabel, terrainSeedLabel,
-			perlinOrValueLabel, treeLabel, rulesLabel, startStringLabel, iterationsLabel, angleIncrementLabel, zLabel, zRandLabel, yLabel,
-			yRandLabel, baseRadiusLabel, radiusDecreaseLabel, baseHeightLabel, heightDecreaseLabel, yStartLabel,
-			treeSeedLabel, wireframeLabel;
+			perlinOrValueLabel, treeLabel, rulesLabel, startStringLabel, iterationsLabel, treeCountLabel,
+			subdivisionsLabel, angleIncrementLabel, zLabel, zRandLabel, yLabel, yRandLabel, baseRadiusLabel,
+			radiusDecreaseLabel, baseHeightLabel, heightDecreaseLabel, yStartLabel, treeSeedLabel, useFastLabel,
+			wireframeLabel;
 	private static JTextField widthField, heightField, scaleField, amplitudeField, roughnessField, octavesField,
-			pOctave1Field, pOctave2Field, voronoiField, voronoiPointsField, terrainSeedField, rulesField, startStringField,
-			iterationsField, zField, zRandField, yField, yRandField, baseRadiusField, radiusDecreaseField,
-			baseHeightField, heightDecreaseField, yStartField, treeSeedField;
-	private static JRadioButton perlinButton, valueButton, wireframeButton;
+			pOctave1Field, pOctave2Field, voronoiField, voronoiPointsField, terrainSeedField, rulesField,
+			startStringField, iterationsField, treeCountField, subdivisionsField, zField, zRandField, yField,
+			yRandField, baseRadiusField, radiusDecreaseField, baseHeightField, heightDecreaseField, yStartField,
+			treeSeedField;
+	private static JRadioButton perlinButton, valueButton, wireframeButton, useFastButton;
 	private static ButtonGroup group;
 	private static int width = 600, height = 600;
 	private static IGameLogic game;
@@ -200,7 +202,7 @@ public class Main {
 				height / heightDivisor);
 		frame.add(rulesField);
 		itemNum++;
-		
+
 		startStringLabel = new JLabel("    Start String for L-Systems");
 		startStringLabel.setBounds(width / 100, height / 100 + itemNum * height / heightDivisor, width / 3,
 				height / heightDivisor);
@@ -221,6 +223,28 @@ public class Main {
 		iterationsField.setBounds(width / 100 + width / 3, height / 100 + itemNum * height / heightDivisor, width / 3,
 				height / heightDivisor);
 		frame.add(iterationsField);
+		itemNum++;
+
+		treeCountLabel = new JLabel("    Tree Count");
+		treeCountLabel.setBounds(width / 100, height / 100 + itemNum * height / heightDivisor, width / 3,
+				height / heightDivisor);
+		frame.add(treeCountLabel);
+		treeCountField = new JTextField();
+		treeCountField.setText("100");
+		treeCountField.setBounds(width / 100 + width / 3, height / 100 + itemNum * height / heightDivisor, width / 3,
+				height / heightDivisor);
+		frame.add(treeCountField);
+		itemNum++;
+
+		subdivisionsLabel = new JLabel("    Tree Part Subdivisions");
+		subdivisionsLabel.setBounds(width / 100, height / 100 + itemNum * height / heightDivisor, width / 3,
+				height / heightDivisor);
+		frame.add(subdivisionsLabel);
+		subdivisionsField = new JTextField();
+		subdivisionsField.setText("6");
+		subdivisionsField.setBounds(width / 100 + width / 3, height / 100 + itemNum * height / heightDivisor, width / 3,
+				height / heightDivisor);
+		frame.add(subdivisionsField);
 		itemNum++;
 
 		angleIncrementLabel = new JLabel("    Angle Increments:");
@@ -333,7 +357,17 @@ public class Main {
 		frame.add(treeSeedField);
 		itemNum++;
 
-		wireframeLabel = new JLabel("display wireframes?");
+		useFastLabel = new JLabel("Use Fast Tree Generator?");
+		useFastLabel.setBounds(width / 100, height / 100 + itemNum * height / heightDivisor, width / 3,
+				height / heightDivisor);
+		frame.add(useFastLabel);
+		useFastButton = new JRadioButton("Fast", true);
+		useFastButton.setBounds(width / 100 + width / 3, height / 100 + itemNum * height / heightDivisor, width / 3,
+				height / heightDivisor);
+		frame.add(useFastButton);
+		itemNum++;
+
+		wireframeLabel = new JLabel("Display Wireframes?");
 		wireframeLabel.setBounds(width / 100, height / 100 + itemNum * height / heightDivisor, width / 3,
 				height / heightDivisor);
 		frame.add(wireframeLabel);
@@ -370,7 +404,9 @@ public class Main {
 							Float.parseFloat(radiusDecreaseField.getText()),
 							Float.parseFloat(baseHeightField.getText()),
 							Float.parseFloat(heightDecreaseField.getText()), Float.parseFloat(yStartField.getText()),
-							Integer.parseInt(voronoiPointsField.getText()), startStringField.getText());
+							Integer.parseInt(voronoiPointsField.getText()), startStringField.getText(),
+							Integer.parseInt(treeCountField.getText()), useFastButton.isSelected(),
+							Integer.parseInt(subdivisionsField.getText()));
 					gameEngine = new GameEngine("GAME", screen.width, screen.height, vSync,
 							wireframeButton.isSelected(), game);
 					gameEngine.start();
