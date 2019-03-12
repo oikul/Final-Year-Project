@@ -63,23 +63,6 @@ public class VoronoiGenerator {
 		return mesh;
 	}
 	
-//	public Mesh generateRoads(){
-//		Mesh mesh;
-//		float[] positions, textCoords, normals;
-//		int[] indices;
-//		List<Float> positionsList = new ArrayList<Float>(), textCoordsList = new ArrayList<Float>(), normalsList = new ArrayList<Float>();
-//		List<Integer> indicesList = new ArrayList<Integer>();
-//		
-//		
-//		
-//		positions = listToArrayF(positionsList);
-//		textCoords = listToArrayF(textCoordsList);
-//		normals = listToArrayF(normalsList);
-//		indices = listToArrayI(indicesList);
-//		mesh = new Mesh(positions, textCoords, normals, indices);
-//		return mesh;
-//	}
-	
 	public BufferedImage createVoronoiImage(int numOfPoints, float minX, float maxX, float minZ, float maxZ, float range){
 		double[] xValuesIn = new double[numOfPoints], zValuesIn = new double[numOfPoints];
 		for(int i = 0; i < numOfPoints; i++){

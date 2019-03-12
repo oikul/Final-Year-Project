@@ -54,13 +54,13 @@ public class Game implements IGameLogic {
 
 	// terrain variables
 	private int blocksPerRow = 1, width = 256, height = 256, textInc = 1, octaves = 4, poctave1 = 4, poctave2 = 5,
-			voronoiSize = 4096;
+			voronoiSize = 4096, voronoiPoints = 9;
 	private float scale = 1f, amplitude = 6f, roughness = 1f;
 	private long terrainSeed = 0;
 	private boolean perlinOrValue = true;
 
 	// tree variables
-	private String rules = "X0.4>F+[[X]-X]-F[-FX]+X,X0.4>F*[[X]/X]/F[/FX]*X,X0.4>F/[[X]*X]*F[*FX]/X,X0.4>F-[[X]+X]+F[+FX]-X,F0.6>FF";
+	private String startString = "X", rules = "X0.4>F+[[X]-X]-F[-FX]+X,X0.4>F*[[X]/X]/F[/FX]*X,X0.4>F/[[X]*X]*F[*FX]/X,X0.4>F-[[X]+X]+F[+FX]-X,F0.6>FF";
 	private long treeSeed = 0;
 	private int iterations = 4;
 	private float angleIncrementZ = 30f, angleRandZ = 30f, angleIncrementY = 30f, angleRandY = 30f, baseRadius = 0.4f,
@@ -76,7 +76,7 @@ public class Game implements IGameLogic {
 	public Game(int width, int height, int octaves, int poctave1, int poctave2, int voronoiSize, float scale,
 			float amplitude, float roughness, long terrainSeed, boolean perlinOrValue, String rules, long treeSeed,
 			int iterations, float angleIncrementZ, float angleRandZ, float angleIncrementY, float angleRandY,
-			float baseRadius, float radiusDecrease, float baseHeight, float heightDecrease, float startY) {
+			float baseRadius, float radiusDecrease, float baseHeight, float heightDecrease, float startY, int voronoiPoints, String startString) {
 		setWidth(width);
 		setHeight(height);
 		setOctaves(octaves);
@@ -100,6 +100,8 @@ public class Game implements IGameLogic {
 		setBaseHeight(baseHeight);
 		setHeightDecrease(heightDecrease);
 		setStartY(startY);
+		setVoronoiPoints(voronoiPoints);
+		setStartString(startString);
 		renderer = new Renderer();
 		camera = new Camera();
 		entityList = new ArrayList<Entity>();
@@ -110,13 +112,13 @@ public class Game implements IGameLogic {
 	public void init(Window window) throws Exception {
 		renderer.init(window);
 		Terrain terrain = new Terrain(blocksPerRow, scale, width, height, textInc, terrainSeed, amplitude, roughness,
-				octaves, poctave1, poctave2, perlinOrValue, voronoiSize);
+				octaves, poctave1, poctave2, perlinOrValue, voronoiSize, voronoiPoints);
 		entityList.add(terrain.getChunks()[0]);
 		random = new Random();
 		TreeGenerator treeGen = new TreeGenerator(rules, treeSeed);
 		Entity[] tree;
 		for (int loop = 0; loop < 3; loop++) {
-			tree = treeGen.makeTree(iterations, angleIncrementZ, angleRandZ, angleIncrementY, angleRandY, baseRadius,
+			tree = treeGen.makeTree(iterations, startString, angleIncrementZ, angleRandZ, angleIncrementY, angleRandY, baseRadius,
 					radiusDecrease, baseHeight, heightDecrease, random.nextFloat() * width - (width / 2), startY,
 					random.nextFloat() * height - (height / 2));
 			for (int i = 0; i < tree.length; i++) {
@@ -471,5 +473,21 @@ public class Game implements IGameLogic {
 
 	public void setStartY(float startY) {
 		this.startY = startY;
+	}
+
+	public int getVoronoiPoints() {
+		return voronoiPoints;
+	}
+
+	public void setVoronoiPoints(int voronoiPoints) {
+		this.voronoiPoints = voronoiPoints;
+	}
+
+	public String getStartString() {
+		return startString;
+	}
+
+	public void setStartString(String startString) {
+		this.startString = startString;
 	}
 }

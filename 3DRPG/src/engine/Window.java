@@ -1,4 +1,5 @@
 package engine;
+
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
@@ -22,6 +23,7 @@ import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.opengl.GL11.glCullFace;
+import static org.lwjgl.opengl.GL11.glPolygonMode;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
@@ -38,7 +40,6 @@ public class Window {
 	private boolean resized;
 
 	public Window() {
-		glfwTerminate();
 		if (!glfwInit()) {
 			throw new IllegalStateException();
 		}
@@ -48,11 +49,12 @@ public class Window {
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 	}
 
-	public void createWindow(int width, int height, String title, long monitor, long fullscreen, boolean vSync) {
+	public void createWindow(int width, int height, String title, long monitor, long fullscreen, boolean vSync,
+			boolean wireframe) {
 		this.width = width;
 		this.height = height;
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-		//glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+		// glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 		window = glfwCreateWindow(width, height, title, glfwGetPrimaryMonitor(), 0);
 		if (window == 0) {
 			throw new IllegalStateException("Failed to create window");
@@ -60,8 +62,9 @@ public class Window {
 		glfwMakeContextCurrent(window);
 		GL.createCapabilities();
 
-		//GLFWVidMode videoMode = glfwGetVideoMode(monitor);
-		//glfwSetWindowPos(window, (videoMode.width() - 640) / 2, (videoMode.height() - 480) / 2);
+		// GLFWVidMode videoMode = glfwGetVideoMode(monitor);
+		// glfwSetWindowPos(window, (videoMode.width() - 640) / 2,
+		// (videoMode.height() - 480) / 2);
 
 		glfwSetFramebufferSizeCallback(window, (window, windowWidth, windowHeight) -> {
 			Window.this.setWidth(windowWidth);
@@ -75,9 +78,12 @@ public class Window {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL11.GL_DEPTH_TEST);
-		glEnable(GL11.GL_CULL_FACE);
-		glCullFace(GL11.GL_FRONT);
-		//glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+		if (wireframe) {
+			glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+		} else {
+			glEnable(GL11.GL_CULL_FACE);
+			glCullFace(GL11.GL_FRONT);
+		}
 		glfwShowWindow(window);
 	}
 
@@ -128,8 +134,8 @@ public class Window {
 	public void setHeight(int height) {
 		this.height = height;
 	}
-	
-	public long getWindowHandle(){
+
+	public long getWindowHandle() {
 		return window;
 	}
 

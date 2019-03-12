@@ -24,9 +24,9 @@ public class TreeGenerator {
 		lSystemGen = new LSystemGenerator(rules, seed);
 	}
 	
-	public Entity[] makeTree(int iterations, float angleIncrementZ, float angleRandZ, float angleIncrementY, float angleRandY, float baseRadius, float radiusDecrease, float baseHeight,
+	public Entity[] makeTree(int iterations, String startString, float angleIncrementZ, float angleRandZ, float angleIncrementY, float angleRandY, float baseRadius, float radiusDecrease, float baseHeight,
 			float heightDecrease, float startX, float startY, float startZ){
-		String treeString = lSystemGen.repeat(iterations, "X");
+		String treeString = lSystemGen.repeat(iterations, startString);
 		cylinder = new CylinderGenerator();
 		Vector3f position = new Vector3f(startX, startY, startZ), rotation = new Vector3f(0, 0, 0);
 		Stack<Float> variableSave = new Stack<Float>();

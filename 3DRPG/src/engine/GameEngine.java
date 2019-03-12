@@ -9,25 +9,26 @@ public class GameEngine implements Runnable {
 
 	private Window window;
 	private IGameLogic gameLogic;
-	private final Thread gameLoopThread;
+	//private final Thread gameLoopThread;
 	private String title;
 	private int width, height;
-	private boolean vSync;
+	private boolean vSync, wireframe;
 	private MouseInput mouseInput;
 
-	public GameEngine(String title, int width, int height, boolean vSync, IGameLogic gameLogic) throws Exception {
-		gameLoopThread = new Thread(this, "GAME_LOOP_THREAD");
+	public GameEngine(String title, int width, int height, boolean vSync, boolean wireframe, IGameLogic gameLogic) throws Exception {
+		//gameLoopThread = new Thread(this, "GAME_LOOP_THREAD");
 		window = new Window();
 		this.gameLogic = gameLogic;
 		this.title = title;
 		this.width = width;
 		this.height = height;
 		this.vSync = vSync;
+		this.wireframe = wireframe;
 		mouseInput = new MouseInput();
 	}
 
 	public void start() {
-		gameLoopThread.start();
+		run();
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class GameEngine implements Runnable {
 	}
 
 	private void init() {
-		window.createWindow(width, height, title, glfwGetPrimaryMonitor(), 0, vSync);
+		window.createWindow(width, height, title, glfwGetPrimaryMonitor(), 0, vSync, wireframe);
 		try {
 			gameLogic.init(window);
 			mouseInput.init(window);
@@ -75,12 +76,6 @@ public class GameEngine implements Runnable {
 	
 	public void cleanup(){
 		gameLogic.cleanup();
-		window.destroy();
-		try {
-			gameLoopThread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void handleInput() {

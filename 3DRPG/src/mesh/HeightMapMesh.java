@@ -16,7 +16,7 @@ public class HeightMapMesh {
 	private float[] positions, textCoords, normals;
 	private int[] indices;
 
-	public HeightMapMesh(int width, int height, int textInc, long seed, float amplitude, float roughness, int voctaves, int poctave1, int poctave2, boolean perlinorvalue, int voronoiSize) {
+	public HeightMapMesh(int width, int height, int textInc, long seed, float amplitude, float roughness, int voctaves, int poctave1, int poctave2, boolean perlinorvalue, int voronoiSize, int voronoiPoints) {
 		PerlinNoiseGenerator pGenerator = null;
 		ValueNoiseGenerator vGenerator = null;
 		if(perlinorvalue){
@@ -68,7 +68,7 @@ public class HeightMapMesh {
 		Material m = new Material(new Texture("grass"), 0f);
 		VoronoiGenerator voronoi = new VoronoiGenerator(0, seed);
 		Texture t = new Texture();
-		t.setImage(voronoi.createVoronoiImage(9, 0f, voronoiSize, 0f, voronoiSize, voronoiSize));
+		t.setImage(voronoi.createVoronoiImage(voronoiPoints, 0f, voronoiSize, 0f, voronoiSize, voronoiSize));
 		t.loadTexture();
 		m.setSecondaryTexture(t);
 		this.mesh.setMaterial(m);
