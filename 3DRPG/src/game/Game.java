@@ -126,9 +126,14 @@ public class Game implements IGameLogic {
 		Entity[] trees;
 		if (useFast) {
 			for (int loop = 0; loop < treeCount; loop++) {
+				int point = random.nextInt(terrain.getChunks()[0].getMesh().getPositions().length / 3);
+				float x, y, z;
+				x = terrain.getChunks()[0].getMesh().getY(point) + terrain.getxDisplacement();
+				y = terrain.getChunks()[0].getMesh().getX(point) + terrain.getAmplitude() + startY;
+				z = terrain.getChunks()[0].getMesh().getZ(point) + terrain.getzDisplacement();
 				tree = treeGen.makeTreeFast(iterations, startString, angleIncrementZ, angleRandZ, angleIncrementY,
 						angleRandY, baseRadius, radiusDecrease, baseHeight, heightDecrease, subdivisions,
-						random.nextFloat() * width - (width / 2), startY, random.nextFloat() * height - (height / 2));
+						x, y, z);
 				entityList.add(tree);
 			}
 		}else{

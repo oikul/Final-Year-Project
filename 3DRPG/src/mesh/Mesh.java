@@ -38,8 +38,10 @@ public class Mesh {
 	protected List<Integer> vboIdList;
 	protected int vertexCount;
 	protected Material material;
+	protected float[] positions;
 
 	public Mesh(float[] positions, float[] textCoords, float[] normals, int[] indices) {
+		this.positions = positions;
 		FloatBuffer posBuffer = null;
         FloatBuffer textCoordsBuffer = null;
         FloatBuffer vecNormalsBuffer = null;
@@ -172,5 +174,22 @@ public class Mesh {
 
     public void setMaterial(Material material) {
         this.material = material;
+    }
+    
+    public float[] getPositions(){
+    	return positions;
+    }
+
+    public float getX(int point) {
+    	return positions[point * 3 - 2];
+    }
+    
+
+    public float getY(int point) {
+    	return positions[point * 3 - 1];
+    }
+    
+    public float getZ(int point) {
+    	return positions[point * 3];
     }
 }

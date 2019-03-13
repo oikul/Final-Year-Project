@@ -340,7 +340,7 @@ public class Main {
 				height / heightDivisor);
 		frame.add(yStartLabel);
 		yStartField = new JTextField();
-		yStartField.setText("-5");
+		yStartField.setText("-3");
 		yStartField.setBounds(width / 100 + width / 3, height / 100 + itemNum * height / heightDivisor, width / 3,
 				height / heightDivisor);
 		frame.add(yStartField);
