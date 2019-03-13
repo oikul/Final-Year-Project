@@ -44,7 +44,7 @@ public class GameEngine implements Runnable {
 	}
 
 	private void init() {
-		window.createWindow(width, height, title, glfwGetPrimaryMonitor(), 0, vSync, wireframe);
+		window.createWindow(width, height, title, 0, 0, vSync, wireframe);
 		try {
 			gameLogic.init(window);
 			mouseInput.init(window);

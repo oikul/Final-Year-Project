@@ -112,7 +112,7 @@ public class TreeGenerator {
 		Stack<Float> variableSave = new Stack<Float>();
 		List<Float> positionsList = new ArrayList<Float>(), textCoordsList = new ArrayList<Float>();
 		List<Integer> indicesList = new ArrayList<Integer>();
-		boolean doneFirstPoly = false;
+		Vector3f v0;
 		float angle = 0;
 		float incAngle = (float) ((float) (2 * Math.PI) / (float) subdivisions);
 		for (int i = 0; i < treeString.length(); i++) {
@@ -121,7 +121,7 @@ public class TreeGenerator {
 				positionsList.add(position.x);
 				positionsList.add(position.y);
 				positionsList.add(position.z);
-				Vector3f v0 = position;
+				v0 = position;
 				for (int j = 0; j < subdivisions; j++) {
 					double incX = baseRadius * Math.cos((double) angle);
 					double incZ = baseRadius * Math.sin((double) angle);
@@ -141,21 +141,6 @@ public class TreeGenerator {
 					indicesList.add(j);
 					indicesList.add((positionsList.size() / 3) - (subdivisions + 1));
 				}
-				if (doneFirstPoly) {
-					for (int j = (positionsList.size() / 3) - 2 * (subdivisions + 1); j < positionsList.size() / 3
-							- (subdivisions + 2); j++) {
-						// connect bottom vertices to top
-						indicesList.add(j);
-						indicesList.add(j + 1);
-						indicesList.add(j + (subdivisions + 1));
-
-						// connect top vertices to bottom
-						indicesList.add(j + 1);
-						indicesList.add(j + (subdivisions + 2));
-						indicesList.add(j + (subdivisions + 1));
-					}
-				}
-				doneFirstPoly = true;
 				position = new Vector3f(
 						position.x + (float) (baseHeight * Math.sin(Math.toRadians(rotation.z))
 								* Math.cos(Math.toRadians(rotation.y))),
@@ -164,6 +149,41 @@ public class TreeGenerator {
 								* Math.sin(Math.toRadians(rotation.y))));
 				baseRadius *= radiusDecrease;
 				baseHeight *= heightDecrease;
+				positionsList.add(position.x);
+				positionsList.add(position.y);
+				positionsList.add(position.z);
+				v0 = position;
+				for (int j = 0; j < subdivisions; j++) {
+					double incX = baseRadius * Math.cos((double) angle);
+					double incZ = baseRadius * Math.sin((double) angle);
+					v0.x = v0.x + (float) incX;
+					v0.z = v0.z + (float) incZ;
+					positionsList.add(v0.x);
+					positionsList.add(v0.y);
+					positionsList.add(v0.z);
+					angle += incAngle;
+					v0 = position;
+				}
+				for (int j = (positionsList.size() / 3) - (subdivisions + 1); j < positionsList.size() / 3 - 1; j++) {
+					indicesList.add((positionsList.size() / 3) - (subdivisions + 1));
+					indicesList.add(j);
+					indicesList.add(j + 1);
+					indicesList.add(j + 1);
+					indicesList.add(j);
+					indicesList.add((positionsList.size() / 3) - (subdivisions + 1));
+				}
+				for (int j = (positionsList.size() / 3) - 2 * (subdivisions + 1); j < positionsList.size() / 3
+						- (subdivisions + 2); j++) {
+					// connect bottom vertices to top
+					indicesList.add(j);
+					indicesList.add(j + 1);
+					indicesList.add(j + (subdivisions + 1));
+
+					// connect top vertices to bottom
+					indicesList.add(j + 1);
+					indicesList.add(j + (subdivisions + 2));
+					indicesList.add(j + (subdivisions + 1));
+				}
 				break;
 			case '+':
 				rotation = new Vector3f(rotation.x, rotation.y,
@@ -203,7 +223,6 @@ public class TreeGenerator {
 					float angleY = variableSave.pop();
 					float angleX = variableSave.pop();
 					rotation = new Vector3f(angleX, angleY, angleZ);
-					doneFirstPoly = false;
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
