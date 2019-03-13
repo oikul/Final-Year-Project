@@ -1,4 +1,5 @@
 package mesh;
+
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
@@ -22,25 +23,25 @@ import org.lwjgl.BufferUtils;
 import game.Game;
 
 public class Texture {
-	
+
 	private final int BYTES_PER_PIXEL = 4;
 	private int textureID;
 	private BufferedImage image;
-	
-	public Texture(String path){
+
+	public Texture(String path) {
 		image = Game.getBufferedImage(path);
 		textureID = loadTexture();
 	}
-	
-	public Texture(){
+
+	public Texture() {
 	}
-	
-	public int loadTexture(){
+
+	public int loadTexture() {
 		int[] pixels = new int[image.getWidth() * image.getHeight()];
 		image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
 		ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * BYTES_PER_PIXEL);
-		for(int y = 0; y < image.getHeight(); y++){
-			for(int x = 0; x < image.getWidth(); x++){
+		for (int y = 0; y < image.getHeight(); y++) {
+			for (int x = 0; x < image.getWidth(); x++) {
 				int pixel = pixels[y * image.getWidth() + x];
 				buffer.put((byte) ((pixel >> 16) & 0xFF));
 				buffer.put((byte) ((pixel >> 8) & 0xFF));
@@ -54,24 +55,25 @@ public class Texture {
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
+				buffer);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		return textureID;
 	}
-	
-	public int getId(){
+
+	public int getId() {
 		return textureID;
 	}
-	
-	public void cleanup(){
+
+	public void cleanup() {
 		glDeleteTextures(textureID);
 	}
-	
-	public int getWidth(){
+
+	public int getWidth() {
 		return image.getWidth();
 	}
 
-	public int getHeight(){
+	public int getHeight() {
 		return image.getHeight();
 	}
 
