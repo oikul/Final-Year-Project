@@ -183,6 +183,15 @@ public class TreeGenerator {
 					indicesList.add(j + 1);
 					indicesList.add(j + (subdivisions + 2));
 					indicesList.add(j + (subdivisions + 1));
+					
+					textCoordsList.add(0f);
+					textCoordsList.add(0f);
+					textCoordsList.add(0f);
+					textCoordsList.add(1f);
+					textCoordsList.add(1f);
+					textCoordsList.add(1f);
+					textCoordsList.add(1f);
+					textCoordsList.add(0f);
 				}
 				break;
 			case '+':
@@ -235,6 +244,7 @@ public class TreeGenerator {
 		normals = calculateNormals(positions, indices);
 		Mesh mesh = new Mesh(positions, textCoords, normals, indices);
 		mesh.setMaterial(new Material(new Vector4f(160.0f / 255.0f, 82.0f / 255.0f, 45.0f / 255.0f, 1f), 0.2f));
+		//mesh.setMaterial(new Material(new Texture("bark"), 0.9f));
 		tree = new Entity(mesh);
 		return tree;
 	}

@@ -65,7 +65,7 @@ public class Game implements IGameLogic {
 	private long treeSeed = 0;
 	private int iterations = 4, treeCount = 100, subdivisions = 6;
 	private float angleIncrementZ = 30f, angleRandZ = 30f, angleIncrementY = 30f, angleRandY = 30f, baseRadius = 0.4f,
-			radiusDecrease = 0.95f, baseHeight = 0.8f, heightDecrease = 0.95f, startY = -3;
+			radiusDecrease = 0.95f, baseHeight = 0.8f, heightDecrease = 0.95f, startY = -5;
 	private boolean useFast = true;
 
 	public Game() {
