@@ -48,13 +48,17 @@ public class Window {
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 	}
 
-	public void createWindow(int width, int height, String title, long monitor, long fullscreen, boolean vSync,
+	public void createWindow(int width, int height, String title, long monitor, boolean fullscreen, boolean vSync,
 			boolean wireframe) {
 		this.width = width;
 		this.height = height;
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 		//glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
-		window = glfwCreateWindow(width, height, title, monitor, 0);
+		if(fullscreen){
+			window = glfwCreateWindow(width, height, title, monitor, 0);
+		}else{
+			window = glfwCreateWindow(width, height, title, 0, 0);
+		}
 		if (window == 0) {
 			throw new IllegalStateException("Failed to create window");
 		}
