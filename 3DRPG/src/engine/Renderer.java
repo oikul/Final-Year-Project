@@ -35,7 +35,7 @@ public class Renderer {
 
 	public void init(Window window) throws Exception {
 		projection = transformation.getProjectionMatrix(FOV, window.getWidth(), window.getHeight(), Z_NEAR, Z_FAR);
-		window.setClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		window.setClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 		shader = new Shader();
 		shader.create("basic");
 		shader.createUniform("projectionMatrix");

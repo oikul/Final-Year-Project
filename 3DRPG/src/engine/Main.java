@@ -385,7 +385,6 @@ public class Main {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					System.out.println("run pressed");
 					boolean perlinOrValue;
 					if (perlinButton.isSelected()) {
 						perlinOrValue = true;

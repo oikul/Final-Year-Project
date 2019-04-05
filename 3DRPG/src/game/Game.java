@@ -117,20 +117,28 @@ public class Game implements IGameLogic {
 	@Override
 	public void init(Window window) throws Exception {
 		renderer.init(window);
+		long beforeTime = System.currentTimeMillis();
 		Terrain terrain = new Terrain(blocksPerRow, scale, width, height, textInc, terrainSeed, amplitude, roughness,
 				octaves, poctave1, poctave2, perlinOrValue, voronoiSize, voronoiPoints);
 		entityList.add(terrain.getChunks()[0]);
+		long afterTime = System.currentTimeMillis();
+		long terrainGenTime = afterTime - beforeTime;
 		random = new Random();
+		long treeGenTime = 0;
+		beforeTime = System.currentTimeMillis();
 		TreeGenerator treeGen = new TreeGenerator(rules, treeSeed);
 		Entity tree;
 		Entity[] trees;
 		if (useFast) {
 			for (int loop = 0; loop < treeCount; loop++) {
-				int point = random.nextInt(terrain.getChunks()[0].getMesh().getPositions().length / 3);
-				float x, y, z;
-				x = terrain.getChunks()[0].getMesh().getY(point) + terrain.getxDisplacement();
-				y = terrain.getChunks()[0].getMesh().getX(point) + terrain.getAmplitude() + startY;
-				z = terrain.getChunks()[0].getMesh().getZ(point) + terrain.getzDisplacement();
+				int point = 0;
+				float x = 0, y = 0, z = 0;
+				if(width != 0 && height != 0){
+					point = random.nextInt(terrain.getChunks()[0].getMesh().getPositions().length / 3);
+					x = terrain.getChunks()[0].getMesh().getY(point) + terrain.getxDisplacement();
+					y = terrain.getChunks()[0].getMesh().getX(point) + terrain.getAmplitude() + startY;
+					z = terrain.getChunks()[0].getMesh().getZ(point) + terrain.getzDisplacement();
+				}
 				tree = treeGen.makeTreeFast(iterations, startString, angleIncrementZ, angleRandZ, angleIncrementY,
 						angleRandY, baseRadius, radiusDecrease, baseHeight, heightDecrease, subdivisions, x, y, z);
 				entityList.add(tree);
@@ -145,6 +153,9 @@ public class Game implements IGameLogic {
 				}
 			}
 		}
+		afterTime = System.currentTimeMillis();
+		treeGenTime = afterTime - beforeTime;
+		//System.out.println(treeGenTime);
 		// VoronoiGenerator voronoi = new VoronoiGenerator(0,
 		// System.currentTimeMillis());
 		// Entity v = new Entity(voronoi.generateVoronoi(9, -128f, 128f, -128f,

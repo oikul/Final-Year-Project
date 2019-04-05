@@ -67,10 +67,13 @@ public class HeightMapMesh {
 		this.mesh = new Mesh(positions, textCoords, normals, indices);
 		Material m = new Material(new Texture("grass"), 0f);
 		VoronoiGenerator voronoi = new VoronoiGenerator(0, seed);
+		long beforeTime = System.currentTimeMillis();
 		Texture t = new Texture();
 		t.setImage(voronoi.createVoronoiImage(voronoiPoints, 0f, voronoiSize, 0f, voronoiSize, voronoiSize));
 		t.loadTexture();
 		m.setSecondaryTexture(t);
+		long afterTime = System.currentTimeMillis();
+		//System.out.println("time taken to generate roads: " + (afterTime - beforeTime) + " ms");
 		this.mesh.setMaterial(m);
 	}
 
